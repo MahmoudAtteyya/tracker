@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Install Chrome for Puppeteer
+echo "Installing Chrome..."
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+apt-get update
+apt-get install -y google-chrome-stable
+
+# Set Chrome binary path
+export CHROME_BIN=/usr/bin/google-chrome-stable
+
+# Install dependencies
+npm install
+
+# Build the React app
+npm run build
+
+echo "Build completed successfully!" 

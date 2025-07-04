@@ -1,13 +1,62 @@
 const puppeteer = require('puppeteer-extra');
+const puppeteerCore = require('puppeteer-core');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
 async function fetchTrackingData(barcode) {
   const mainUrl = 'https://egyptpost.gov.eg/ar-eg/home/eservices/track-and-trace/';
-  const browser = await puppeteer.launch({
+  
+  // Configure Puppeteer for different environments
+  const launchOptions = {
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-features=TranslateUI',
+      '--disable-ipc-flooding-protection'
+    ]
+  };
+
+  // Try to use system Chrome if available
+  const possibleChromePaths = [
+    process.env.CHROME_BIN,
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium'
+  ];
+
+  for (const chromePath of possibleChromePaths) {
+    if (chromePath) {
+      try {
+        const fs = require('fs');
+        if (fs.existsSync(chromePath)) {
+          launchOptions.executablePath = chromePath;
+          console.log(`Using Chrome at: ${chromePath}`);
+          break;
+        }
+      } catch (error) {
+        console.log(`Chrome not found at: ${chromePath}`);
+      }
+    }
+  }
+
+  // If no system Chrome found, let Puppeteer use its bundled version
+  if (!launchOptions.executablePath) {
+    console.log('No system Chrome found, using Puppeteer bundled Chrome');
+  }
+  
+  const browser = await puppeteer.launch(launchOptions);
+  
   const page = await browser.newPage();
 
   await page.goto(mainUrl, { waitUntil: 'networkidle2' });
