@@ -37,9 +37,7 @@ const Header = () => {
           <div className="flex items-center space-x-2 lg:space-x-4">
             {/* Navigation Links - Hidden on mobile */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'}`}>
-                Track Shipment
-              </Link>
+              
               <Link to="/about" className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/about' ? 'text-primary' : 'text-muted-foreground'}`}>
                 About
               </Link>
