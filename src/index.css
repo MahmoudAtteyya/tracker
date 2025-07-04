@@ -1,40 +1,39 @@
+/* Arabic fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Arabic fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;600;700&display=swap');
-
 @layer base {
   :root {
     /* Light mode colors - using your specified palette */
     --background: 245 246 250; /* Soft White #F5F6FA */
-    --foreground: 74 74 74; /* Text Gray #4A4A4A */
+    --foreground: 71 71 71; /* Text Gray #474747 */
 
     --card: 255 255 255; /* White #FFFFFF */
-    --card-foreground: 74 74 74; /* Text Gray #4A4A4A */
+    --card-foreground: 71 71 71; /* Text Gray #474747 */
 
     --popover: 255 255 255; /* White #FFFFFF */
-    --popover-foreground: 74 74 74; /* Text Gray #4A4A4A */
+    --popover-foreground: 71 71 71; /* Text Gray #474747 */
 
     --primary: 157 107 206; /* Accent Purple #9D6BCE */
     --primary-foreground: 255 255 255; /* White */
 
     --secondary: 199 206 234; /* Lavender #C7CEEA */
-    --secondary-foreground: 74 74 74; /* Text Gray #4A4A4A */
+    --secondary-foreground: 71 71 71; /* Text Gray #474747 */
 
-    --muted: 224 224 224; /* Light Gray #E0E0E0 */
+    --muted: 240 240 245; /* Light Gray #F0F0F5 */
     --muted-foreground: 109 93 150; /* Dusty Purple #6D5D96 */
 
     --accent: 163 147 235; /* Light Purple #A393EB */
-    --accent-foreground: 74 74 74; /* Text Gray #4A4A4A */
+    --accent-foreground: 71 71 71; /* Text Gray #474747 */
 
     --destructive: 234 84 85; /* Error Red #EA5455 */
     --destructive-foreground: 255 255 255; /* White */
 
-    --border: 224 224 224; /* Light Gray #E0E0E0 */
-    --input: 199 206 234; /* Lavender #C7CEEA */
+    --border: 230 230 235; /* Light Gray #E6E6EB */
+    --input: 245 246 250; /* Soft White #F5F6FA */
     --ring: 157 107 206; /* Accent Purple #9D6BCE */
 
     --success: 40 199 111; /* Success Green #28C76F */
@@ -45,31 +44,31 @@
   .dark {
     /* Dark mode colors */
     --background: 30 30 47; /* Dark Background #1E1E2F */
-    --foreground: 241 241 241; /* Light Text #F1F1F1 */
+    --foreground: 245 245 245; /* Light Text #F5F5F5 */
 
     --card: 42 43 60; /* Card Dark #2A2B3C */
-    --card-foreground: 241 241 241; /* Light Text #F1F1F1 */
+    --card-foreground: 245 245 245; /* Light Text #F5F5F5 */
 
     --popover: 42 43 60; /* Card Dark #2A2B3C */
-    --popover-foreground: 241 241 241; /* Light Text #F1F1F1 */
+    --popover-foreground: 245 245 245; /* Light Text #F5F5F5 */
 
     --primary: 157 107 206; /* Accent Purple #9D6BCE */
     --primary-foreground: 255 255 255; /* White */
 
     --secondary: 60 42 77; /* Gradient Purple #3C2A4D */
-    --secondary-foreground: 241 241 241; /* Light Text #F1F1F1 */
+    --secondary-foreground: 245 245 245; /* Light Text #F5F5F5 */
 
-    --muted: 60 42 77; /* Gradient Purple #3C2A4D */
+    --muted: 50 45 65; /* Darker Purple #322D41 */
     --muted-foreground: 163 147 235; /* Light Purple #A393EB */
 
     --accent: 109 93 150; /* Dusty Purple #6D5D96 */
-    --accent-foreground: 241 241 241; /* Light Text #F1F1F1 */
+    --accent-foreground: 245 245 245; /* Light Text #F5F5F5 */
 
     --destructive: 234 84 85; /* Error Red #EA5455 */
     --destructive-foreground: 255 255 255; /* White */
 
-    --border: 60 42 77; /* Gradient Purple #3C2A4D */
-    --input: 60 42 77; /* Gradient Purple #3C2A4D */
+    --border: 50 45 65; /* Darker Purple #322D41 */
+    --input: 50 45 65; /* Darker Purple #322D41 */
     --ring: 157 107 206; /* Accent Purple #9D6BCE */
 
     --success: 40 199 111; /* Success Green #28C76F */
@@ -83,6 +82,8 @@
 
   body {
     @apply bg-background text-foreground font-cairo;
+    background-color: rgb(var(--background, 245 246 250)); /* fallback to soft white */
+    color: rgb(var(--foreground, 71 71 71));
     transition: background-color 0.3s ease, color 0.3s ease;
     direction: rtl;
     font-family: 'Cairo', 'Tajawal', sans-serif;
@@ -98,18 +99,21 @@
   /* Professional gradient backgrounds */
   .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(245, 246, 250) 0%, 
-      rgb(199, 206, 234) 25%,
-      rgb(163, 147, 235) 50%,
-      rgb(157, 107, 206) 100%);
+      #F5F6FA 0%, 
+      #E8ECF7 20%,
+      #C7CEEA 40%,
+      #A393EB 60%,
+      #9D6BCE 80%,
+      #7267CB 100%);
   }
 
   .dark .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(30, 30, 47) 0%, 
-      rgb(42, 43, 60) 25%,
-      rgb(60, 42, 77) 50%,
-      rgb(109, 93, 150) 100%);
+      #1E1E2F 0%, 
+      #2A2B3C 25%,
+      #3C2A4D 50%,
+      #6D5D96 75%,
+      #473E66 100%);
   }
 
   /* Professional card styling */
@@ -129,6 +133,59 @@
 
   .shadow-lavender-hover {
     box-shadow: 0 8px 30px rgba(157, 107, 206, 0.25);
+  }
+
+  /* New color classes for the updated palette */
+  .bg-lavender-primary {
+    background-color: #C7CEEA;
+  }
+
+  .bg-light-purple {
+    background-color: #A393EB;
+  }
+
+  .bg-deep-lavender {
+    background-color: #7267CB;
+  }
+
+  .bg-dusty-purple {
+    background-color: #6D5D96;
+  }
+
+  .bg-dark-purple {
+    background-color: #473E66;
+  }
+
+  .bg-soft-white {
+    background-color: #F5F6FA;
+  }
+
+  .bg-accent-purple {
+    background-color: #9D6BCE;
+  }
+
+  .text-lavender-primary {
+    color: #C7CEEA;
+  }
+
+  .text-light-purple {
+    color: #A393EB;
+  }
+
+  .text-deep-lavender {
+    color: #7267CB;
+  }
+
+  .text-dusty-purple {
+    color: #6D5D96;
+  }
+
+  .text-dark-purple {
+    color: #473E66;
+  }
+
+  .text-accent-purple {
+    color: #9D6BCE;
   }
 }
 
@@ -172,6 +229,13 @@
   color: white;
   box-shadow: 0 4px 15px rgba(157, 107, 206, 0.4);
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Enhanced professional card styling */
+.professional-card {
+  @apply bg-card border border-border shadow-lg;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Professional animations */
@@ -243,4 +307,8 @@
 
 .animate-heartbeat {
   animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+#root, .App, main, .min-h-screen, .h-screen, .w-screen {
+  background-color: rgb(var(--background, 245 246 250)) !important;
 }

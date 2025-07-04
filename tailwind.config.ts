@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -23,35 +22,39 @@ export default {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				background: '#FFFFFF',
+				foreground: '#4A4A4A',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#C7CEEA',
+					foreground: '#fff',
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: '#C7CEEA',
+					foreground: '#fff',
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: '#C7CEEA',
+					foreground: '#fff',
+				},
+				card: {
+					DEFAULT: '#fff',
+					foreground: '#4A4A4A',
+				},
+				muted: {
+					DEFAULT: '#E0E0E0',
+					foreground: '#4A4A4A',
+				},
+				success: {
+					DEFAULT: '#28C76F',
+					foreground: '#fff',
+				},
+				error: {
+					DEFAULT: '#EA5455',
+					foreground: '#fff',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -64,17 +67,18 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				lavender: {
-					50: '#f8f7ff',
-					100: '#f0edff',
-					200: '#e4dcff',
-					300: '#d1c0ff',
-					400: '#b599ff',
-					500: '#9467ff',
-					600: '#8b5cf6',
-					700: '#7c3aed',
-					800: '#6d28d9',
-					900: '#5b21b6',
-				}
+					50: '#F5F6FA',
+					100: '#C7CEEA',
+					200: '#FFFFFF',
+					300: '#E0E0E0',
+					400: '#9D6BCE',
+					500: '#A393EB',
+				},
+				'dark-background': '#1E1E2F',
+				'dark-card': '#2A2B3C',
+				'dark-foreground': '#F1F1F1',
+				'gradient-purple': '#3C2A4D',
+				'shadow-soft': 'rgba(0,0,0,0.2)',
 			},
 			fontFamily: {
 				'cairo': ['Cairo', 'sans-serif'],

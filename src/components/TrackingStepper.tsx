@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Check, Package, Truck, Clock } from 'lucide-react';
 
@@ -39,7 +38,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     } else if (step.isCurrent) {
       return {
         circle: 'status-icon-current',
-        line: 'bg-gradient-to-b from-purple-300 to-violet-400',
+        line: 'bg-gradient-to-b from-accent-purple to-deep-lavender',
         card: 'status-current'
       };
     } else {
@@ -73,7 +72,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
                 <div className={`relative flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} shadow-lavender`}>
                   {getStepIcon(step, index)}
                   {step.isCurrent && (
-                    <div className="absolute inset-0 rounded-full border-2 md:border-4 border-primary/20 animate-ping opacity-20"></div>
+                    <div className="absolute inset-0 rounded-full border-2 md:border-4 border-accent-purple/20 animate-ping opacity-20"></div>
                   )}
                 </div>
 
@@ -85,7 +84,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
                         <h3 className="text-lg md:text-xl font-bold text-foreground arabic leading-relaxed">
                           {step.statusArabic}
                         </h3>
-                        <span className="text-sm md:text-base text-primary font-medium arabic leading-relaxed">
+                        <span className="text-sm md:text-base text-accent-purple font-medium arabic leading-relaxed">
                           {step.description}
                         </span>
                       </div>
@@ -95,7 +94,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
                           <span className="text-sm md:text-base font-medium text-foreground arabic">
                             {step.location}
                           </span>
-                          <div className="w-2 h-2 md:w-3 md:h-3 bg-primary rounded-full shadow-sm" />
+                          <div className="w-2 h-2 md:w-3 md:h-3 bg-accent-purple rounded-full shadow-sm" />
                         </div>
                       )}
                     </div>

@@ -42,8 +42,8 @@ const Hero = () => {
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-32 right-20 w-48 h-48 bg-lavender-300/20 rounded-full blur-2xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-lavender-400/15 rounded-full blur-lg animate-pulse delay-500" />
+        <div className="absolute bottom-32 right-20 w-48 h-48 bg-accent-purple/20 rounded-full blur-2xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-light-purple/15 rounded-full blur-lg animate-pulse delay-500" />
       </div>
 
       {/* Content */}
@@ -65,9 +65,9 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 p-2 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                <Input type="text" placeholder="ادخل رقم التتبع الخاص بك" value={trackingCode} onChange={handleInputChange} className="pl-12 pr-4 py-4 text-lg border-0 focus:ring-2 focus:ring-lavender-500 rounded-xl bg-transparent placeholder:text-muted-foreground/60 arabic" disabled={isLoading} />
+                <Input type="text" placeholder="ادخل رقم التتبع الخاص بك" value={trackingCode} onChange={handleInputChange} className="pl-12 pr-4 py-4 text-lg border-0 focus:ring-2 focus:ring-accent-purple rounded-xl bg-transparent placeholder:text-muted-foreground/60 arabic" disabled={isLoading} />
               </div>
-              <Button type="submit" size="lg" disabled={isLoading} className="bg-gradient-to-r from-lavender-600 to-lavender-700 hover:from-lavender-700 hover:to-lavender-800 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2">
+              <Button type="submit" size="lg" disabled={isLoading} className="bg-gradient-to-r from-accent-purple to-deep-lavender hover:from-deep-lavender hover:to-dark-purple text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 border-0">
                 {isLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>
                     <span>Track</span>
                     <ArrowRight className="w-5 h-5" />
