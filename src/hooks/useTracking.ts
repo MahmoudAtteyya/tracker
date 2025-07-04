@@ -54,14 +54,14 @@ export const useTracking = (barcode: string | undefined) => {
       setError(null);
 
       try {
-        // Save to localStorage for recently searched
+        // حفظ في localStorage للبحث الأخير
         const recentSearches = JSON.parse(localStorage.getItem('recentTrackingSearches') || '[]');
         const updatedSearches = [barcode, ...recentSearches.filter((item: string) => item !== barcode)].slice(0, 5);
         localStorage.setItem('recentTrackingSearches', JSON.stringify(updatedSearches));
 
-        console.log('Fetching tracking data for:', barcode);
+        console.log('جاري تتبع الشحنة:', barcode);
 
-        // Try to fetch from the real API
+        // محاولة جلب البيانات من API الحقيقي
         try {
           const response = await fetch(
             `https://egyptpost.gov.eg/ar-EG/TrackTrace/GetShipmentDetails?barcode=${barcode}`,
@@ -76,19 +76,24 @@ export const useTracking = (barcode: string | undefined) => {
 
           if (response.ok) {
             const result: ApiResponse = await response.json();
-            console.log('API Response:', result);
+            console.log('استجابة API:', result);
             
             if (result.success && result.data) {
+              // فلترة البيانات لإظهار المكتملة والحالية فقط
+              const filteredData = result.data.data.filter(item => 
+                item.isFinished || item.isCurrent
+              );
+
               const transformedData: TrackingData = {
                 barcode: result.data.barcode,
                 status: result.data.data.find(item => item.isCurrent)?.mainStatus || 'غير محدد',
-                steps: result.data.data.map((item, index) => ({
+                steps: filteredData.map((item, index) => ({
                   id: `step-${item.status}`,
                   status: item.mainStatus || 'غير محدد',
                   statusArabic: item.itemStatus || 'غير محدد',
                   date: item.date || '',
                   time: item.time || '',
-                  location: item.location ? `${item.location}, ${item.city}, ${item.country}` : '',
+                  location: item.location ? `${item.location}${item.city ? '، ' + item.city : ''}${item.country ? '، ' + item.country : ''}` : '',
                   description: item.itemStatus || 'لا توجد تفاصيل متاحة',
                   isCompleted: item.isFinished,
                   isCurrent: item.isCurrent,
@@ -100,11 +105,11 @@ export const useTracking = (barcode: string | undefined) => {
             }
           }
         } catch (corsError) {
-          console.log('CORS Error, using fallback data:', corsError);
+          console.log('خطأ CORS، استخدام البيانات التجريبية:', corsError);
         }
 
-        // Fallback to mock data when CORS fails
-        console.log('Using mock data for:', barcode);
+        // البيانات التجريبية عند فشل CORS - إظهار المكتملة والحالية فقط
+        console.log('استخدام البيانات التجريبية للرقم:', barcode);
         const mockData: TrackingData = {
           barcode,
           status: 'في المعالجة البريدية',
@@ -127,7 +132,7 @@ export const useTracking = (barcode: string | undefined) => {
               date: '29 يونيو 2025',
               time: '12:27 مساءً',
               location: 'المركز اللوجيستى بالسويس، السويس، مصر',
-              description: 'تم استلام الشحنة من الجهة المرسلة',
+              description: 'تم استلام الشحنة من الجهة المرسلة بنجاح',
               isCompleted: true,
               isCurrent: false,
             },
@@ -141,35 +146,13 @@ export const useTracking = (barcode: string | undefined) => {
               description: 'تم وصول الشحنة إلى المكتب وجاري المعالجة',
               isCompleted: false,
               isCurrent: true,
-            },
-            {
-              id: '4',
-              status: 'خارج للتسليم',
-              statusArabic: 'في الطريق للتسليم',
-              date: '',
-              time: '',
-              location: '',
-              description: 'سيتم تسليم الشحنة قريباً',
-              isCompleted: false,
-              isCurrent: false,
-            },
-            {
-              id: '5',
-              status: 'تم التسليم',
-              statusArabic: 'تم التسليم بنجاح',
-              date: '',
-              time: '',
-              location: '',
-              description: 'تم تسليم الشحنة بنجاح',
-              isCompleted: false,
-              isCurrent: false,
             }
           ]
         };
 
         setData(mockData);
       } catch (err) {
-        console.error('Tracking error:', err);
+        console.error('خطأ في التتبع:', err);
         setError('حدث خطأ في تتبع الشحنة. يرجى المحاولة مرة أخرى.');
         toast({
           title: "خطأ في التتبع",

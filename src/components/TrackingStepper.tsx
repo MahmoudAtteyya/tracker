@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, Package, Truck, Hourglass } from 'lucide-react';
+import { Check, Package, Truck, Clock } from 'lucide-react';
 
 interface TrackingStep {
   id: string;
@@ -21,19 +21,11 @@ interface TrackingStepperProps {
 const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
   const getStepIcon = (step: TrackingStep, index: number) => {
     if (step.isCompleted) {
-      return <Check className="w-5 h-5 text-white" />;
+      return <Check className="w-6 h-6 text-white" />;
     } else if (step.isCurrent) {
-      return <Hourglass className="w-5 h-5 text-white animate-pulse" />;
+      return <Clock className="w-6 h-6 text-white" />;
     } else {
-      // Different icons for different steps
-      switch (index % 3) {
-        case 0:
-          return <Package className="w-5 h-5" />;
-        case 1:
-          return <Truck className="w-5 h-5" />;
-        default:
-          return <Hourglass className="w-5 h-5" />;
-      }
+      return index % 2 === 0 ? <Package className="w-6 h-6" /> : <Truck className="w-6 h-6" />;
     }
   };
 
@@ -41,81 +33,86 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     if (step.isCompleted) {
       return {
         circle: 'status-icon-completed',
-        line: 'bg-green-300',
+        line: 'bg-gradient-to-b from-emerald-300 to-green-300',
         card: 'status-completed'
       };
     } else if (step.isCurrent) {
       return {
         circle: 'status-icon-current',
-        line: 'bg-gradient-to-b from-violet-300 to-slate-200',
+        line: 'bg-gradient-to-b from-violet-300 to-purple-300',
         card: 'status-current'
       };
     } else {
       return {
-        circle: 'status-icon-pending',
+        circle: 'bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400',
         line: 'bg-slate-200 dark:bg-slate-700',
-        card: 'status-pending'
+        card: 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
       };
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="space-y-6">
+      <div className="space-y-8">
         {steps.map((step, index) => {
           const styles = getStepStyles(step);
           const isLast = index === steps.length - 1;
 
           return (
-            <div key={step.id} className="relative animate-fade-in">
-              {/* Connecting Line */}
+            <div key={step.id} className="relative animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              {/* خط الربط */}
               {!isLast && (
-                <div className="absolute right-6 top-16 w-0.5 h-16 -mr-px">
-                  <div className={`w-full h-full ${styles.line} transition-all duration-500`} />
+                <div className="absolute right-7 top-20 w-1 h-20 -mr-px">
+                  <div className={`w-full h-full ${styles.line} transition-all duration-700 rounded-full`} />
                 </div>
               )}
 
-              {/* Step Content */}
-              <div className="flex items-start space-x-4 space-x-reverse">
-                {/* Step Circle */}
-                <div className={`relative flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${styles.circle}`}>
+              {/* محتوى الخطوة */}
+              <div className="flex items-start space-x-6 space-x-reverse">
+                {/* دائرة الخطوة */}
+                <div className={`relative flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} shadow-elegant`}>
                   {getStepIcon(step, index)}
+                  {step.isCurrent && (
+                    <div className="absolute inset-0 rounded-full border-4 border-violet-200 animate-ping opacity-20"></div>
+                  )}
                 </div>
 
-                {/* Step Details */}
-                <div className={`flex-1 p-6 rounded-xl border transition-all duration-300 professional-card ${styles.card}`}>
-                  <div className="flex flex-col gap-4 text-right">
+                {/* تفاصيل الخطوة */}
+                <div className={`flex-1 p-8 rounded-2xl border-2 transition-all duration-500 professional-card-hover ${styles.card} shadow-elegant hover:shadow-elegant-hover`}>
+                  <div className="flex flex-col gap-6 text-right">
                     <div className="flex-1">
-                      <div className="flex flex-col gap-2 mb-3">
-                        <h3 className="text-lg font-semibold text-foreground arabic">
+                      <div className="flex flex-col gap-3 mb-4">
+                        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 arabic leading-relaxed">
                           {step.status}
                         </h3>
-                        <span className="text-base text-muted-foreground arabic">
+                        <span className="text-lg text-violet-600 dark:text-violet-400 font-medium arabic leading-relaxed">
                           {step.statusArabic}
                         </span>
                       </div>
                       
-                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed arabic">
+                      <p className="text-base text-slate-600 dark:text-slate-300 mb-6 leading-loose arabic">
                         {step.description}
                       </p>
                       
                       {step.location && (
-                        <p className="text-sm font-medium text-foreground flex items-center justify-end gap-2 arabic">
-                          <span>{step.location}</span>
-                          <span className="w-2 h-2 bg-violet-500 rounded-full" />
-                        </p>
+                        <div className="flex items-center justify-end gap-3 mb-4">
+                          <span className="text-base font-medium text-slate-700 dark:text-slate-200 arabic">
+                            {step.location}
+                          </span>
+                          <div className="w-3 h-3 bg-violet-500 rounded-full shadow-sm" />
+                        </div>
                       )}
                     </div>
 
                     {(step.date || step.time) && (
-                      <div className="flex flex-col items-end text-right border-t pt-3">
+                      <div className="flex flex-col items-end text-right border-t-2 border-slate-100 dark:border-slate-700 pt-6">
                         {step.date && (
-                          <div className="text-sm font-medium text-foreground arabic">
+                          <div className="text-lg font-semibold text-slate-800 dark:text-slate-100 arabic mb-1">
                             {step.date}
                           </div>
                         )}
                         {step.time && (
-                          <div className="text-sm text-muted-foreground arabic">
+                          <div className="text-base text-slate-500 dark:text-slate-400 arabic">
                             {step.time}
                           </div>
                         )}

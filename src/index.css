@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 /* Arabic fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -17,13 +17,13 @@
     --popover: 255 255 255;
     --popover-foreground: 51 51 51;
 
-    --primary: 139 92 246;
+    --primary: 124 58 237;
     --primary-foreground: 255 255 255;
 
     --secondary: 248 250 252;
     --secondary-foreground: 71 85 105;
 
-    --muted: 248 250 252;
+    --muted: 245 247 250;
     --muted-foreground: 100 116 139;
 
     --accent: 243 244 246;
@@ -33,8 +33,8 @@
     --destructive-foreground: 255 255 255;
 
     --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 139 92 246;
+    --input: 230 230 250;
+    --ring: 124 58 237;
 
     --radius: 0.75rem;
   }
@@ -76,8 +76,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-background text-foreground font-cairo;
     transition: background-color 0.3s ease, color 0.3s ease;
+    direction: rtl;
   }
 
   /* Arabic text styling */
@@ -86,30 +87,32 @@
     direction: rtl;
   }
 
-  /* Improved gradient backgrounds */
+  /* Professional gradient backgrounds */
   .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(139, 92, 246) 0%, 
-      rgb(167, 139, 250) 25%,
-      rgb(196, 181, 253) 50%,
-      rgb(255, 255, 255) 100%);
+      rgb(248, 250, 252) 0%, 
+      rgb(230, 230, 250) 25%,
+      rgb(221, 214, 254) 50%,
+      rgb(196, 181, 253) 75%,
+      rgb(167, 139, 250) 100%);
   }
 
   .dark .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(139, 92, 246) 0%, 
-      rgb(99, 102, 241) 25%,
-      rgb(67, 56, 202) 50%,
-      rgb(15, 23, 42) 100%);
+      rgb(15, 23, 42) 0%, 
+      rgb(30, 41, 59) 25%,
+      rgb(51, 65, 85) 50%,
+      rgb(99, 102, 241) 75%,
+      rgb(124, 58, 237) 100%);
   }
 
   /* Professional card styling */
   .professional-card {
-    @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm;
+    @apply bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm;
   }
 
   .professional-card-hover {
-    @apply hover:shadow-md transition-shadow duration-200;
+    @apply hover:shadow-lg transition-all duration-300;
   }
 }
 
@@ -119,38 +122,55 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-100 dark:bg-slate-800;
+  @apply bg-slate-50 dark:bg-slate-800;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+  @apply bg-violet-300 dark:bg-violet-600 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400 dark:bg-slate-500;
+  @apply bg-violet-400 dark:bg-violet-500;
 }
 
 /* Status-specific colors */
 .status-completed {
-  @apply bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800;
+  @apply bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/30 border-emerald-200 dark:border-emerald-700;
 }
 
 .status-current {
-  @apply bg-violet-50 dark:bg-violet-950/20 border-violet-200 dark:border-violet-700;
-}
-
-.status-pending {
-  @apply bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700;
+  @apply bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30 border-violet-200 dark:border-violet-600;
 }
 
 .status-icon-completed {
-  @apply bg-green-500 text-white;
+  @apply bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg;
 }
 
 .status-icon-current {
-  @apply bg-violet-500 text-white;
+  @apply bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg animate-pulse;
 }
 
-.status-icon-pending {
-  @apply bg-slate-300 dark:bg-slate-600 text-slate-600 dark:text-slate-400;
+/* Professional animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+/* Professional shadows */
+.shadow-elegant {
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.1);
+}
+
+.shadow-elegant-hover {
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
 }
