@@ -17,6 +17,7 @@ interface TrackingStep {
 interface TrackingData {
   barcode: string;
   status: string;
+  currentStatus: string;
   steps: TrackingStep[];
 }
 
@@ -84,9 +85,13 @@ export const useTracking = (barcode: string | undefined) => {
                 item.isFinished || item.isCurrent
               );
 
+              const currentItem = result.data.data.find(item => item.isCurrent);
+              const currentStatus = currentItem?.mainStatus || 'غير محدد';
+
               const transformedData: TrackingData = {
                 barcode: result.data.barcode,
-                status: result.data.data.find(item => item.isCurrent)?.mainStatus || 'غير محدد',
+                status: currentStatus,
+                currentStatus: currentStatus,
                 steps: filteredData.map((item, index) => ({
                   id: `step-${item.status}`,
                   status: item.mainStatus || 'غير محدد',
@@ -113,6 +118,7 @@ export const useTracking = (barcode: string | undefined) => {
         const mockData: TrackingData = {
           barcode,
           status: 'في المعالجة البريدية',
+          currentStatus: 'في المعالجة البريدية',
           steps: [
             {
               id: '1',
