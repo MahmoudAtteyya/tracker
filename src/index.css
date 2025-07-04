@@ -8,65 +8,71 @@
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 51 51 51;
+    /* Light mode colors - using your specified palette */
+    --background: 245 246 250; /* Soft White #F5F6FA */
+    --foreground: 74 74 74; /* Text Gray #4A4A4A */
 
-    --card: 255 255 255;
-    --card-foreground: 51 51 51;
+    --card: 255 255 255; /* White #FFFFFF */
+    --card-foreground: 74 74 74; /* Text Gray #4A4A4A */
 
-    --popover: 255 255 255;
-    --popover-foreground: 51 51 51;
+    --popover: 255 255 255; /* White #FFFFFF */
+    --popover-foreground: 74 74 74; /* Text Gray #4A4A4A */
 
-    --primary: 124 58 237;
-    --primary-foreground: 255 255 255;
+    --primary: 157 107 206; /* Accent Purple #9D6BCE */
+    --primary-foreground: 255 255 255; /* White */
 
-    --secondary: 248 250 252;
-    --secondary-foreground: 71 85 105;
+    --secondary: 199 206 234; /* Lavender #C7CEEA */
+    --secondary-foreground: 74 74 74; /* Text Gray #4A4A4A */
 
-    --muted: 245 247 250;
-    --muted-foreground: 100 116 139;
+    --muted: 224 224 224; /* Light Gray #E0E0E0 */
+    --muted-foreground: 109 93 150; /* Dusty Purple #6D5D96 */
 
-    --accent: 243 244 246;
-    --accent-foreground: 55 65 81;
+    --accent: 163 147 235; /* Light Purple #A393EB */
+    --accent-foreground: 74 74 74; /* Text Gray #4A4A4A */
 
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
+    --destructive: 234 84 85; /* Error Red #EA5455 */
+    --destructive-foreground: 255 255 255; /* White */
 
-    --border: 226 232 240;
-    --input: 230 230 250;
-    --ring: 124 58 237;
+    --border: 224 224 224; /* Light Gray #E0E0E0 */
+    --input: 199 206 234; /* Lavender #C7CEEA */
+    --ring: 157 107 206; /* Accent Purple #9D6BCE */
+
+    --success: 40 199 111; /* Success Green #28C76F */
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 15 23 42;
-    --foreground: 248 250 252;
+    /* Dark mode colors */
+    --background: 30 30 47; /* Dark Background #1E1E2F */
+    --foreground: 241 241 241; /* Light Text #F1F1F1 */
 
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
+    --card: 42 43 60; /* Card Dark #2A2B3C */
+    --card-foreground: 241 241 241; /* Light Text #F1F1F1 */
 
-    --popover: 30 41 59;
-    --popover-foreground: 248 250 252;
+    --popover: 42 43 60; /* Card Dark #2A2B3C */
+    --popover-foreground: 241 241 241; /* Light Text #F1F1F1 */
 
-    --primary: 167 139 250;
-    --primary-foreground: 30 41 59;
+    --primary: 157 107 206; /* Accent Purple #9D6BCE */
+    --primary-foreground: 255 255 255; /* White */
 
-    --secondary: 51 65 85;
-    --secondary-foreground: 226 232 240;
+    --secondary: 60 42 77; /* Gradient Purple #3C2A4D */
+    --secondary-foreground: 241 241 241; /* Light Text #F1F1F1 */
 
-    --muted: 51 65 85;
-    --muted-foreground: 148 163 184;
+    --muted: 60 42 77; /* Gradient Purple #3C2A4D */
+    --muted-foreground: 163 147 235; /* Light Purple #A393EB */
 
-    --accent: 71 85 105;
-    --accent-foreground: 226 232 240;
+    --accent: 109 93 150; /* Dusty Purple #6D5D96 */
+    --accent-foreground: 241 241 241; /* Light Text #F1F1F1 */
 
-    --destructive: 248 113 113;
-    --destructive-foreground: 30 41 59;
+    --destructive: 234 84 85; /* Error Red #EA5455 */
+    --destructive-foreground: 255 255 255; /* White */
 
-    --border: 71 85 105;
-    --input: 71 85 105;
-    --ring: 167 139 250;
+    --border: 60 42 77; /* Gradient Purple #3C2A4D */
+    --input: 60 42 77; /* Gradient Purple #3C2A4D */
+    --ring: 157 107 206; /* Accent Purple #9D6BCE */
+
+    --success: 40 199 111; /* Success Green #28C76F */
   }
 }
 
@@ -79,75 +85,93 @@
     @apply bg-background text-foreground font-cairo;
     transition: background-color 0.3s ease, color 0.3s ease;
     direction: rtl;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
   }
 
   /* Arabic text styling */
   .arabic {
     @apply font-cairo;
     direction: rtl;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
   }
 
   /* Professional gradient backgrounds */
   .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(248, 250, 252) 0%, 
-      rgb(230, 230, 250) 25%,
-      rgb(221, 214, 254) 50%,
-      rgb(196, 181, 253) 75%,
-      rgb(167, 139, 250) 100%);
+      rgb(245, 246, 250) 0%, 
+      rgb(199, 206, 234) 25%,
+      rgb(163, 147, 235) 50%,
+      rgb(157, 107, 206) 100%);
   }
 
   .dark .lavender-gradient {
     background: linear-gradient(135deg, 
-      rgb(15, 23, 42) 0%, 
-      rgb(30, 41, 59) 25%,
-      rgb(51, 65, 85) 50%,
-      rgb(99, 102, 241) 75%,
-      rgb(124, 58, 237) 100%);
+      rgb(30, 30, 47) 0%, 
+      rgb(42, 43, 60) 25%,
+      rgb(60, 42, 77) 50%,
+      rgb(109, 93, 150) 100%);
   }
 
   /* Professional card styling */
   .professional-card {
-    @apply bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm;
+    @apply bg-card border border-border shadow-lg;
+    backdrop-filter: blur(10px);
   }
 
   .professional-card-hover {
-    @apply hover:shadow-lg transition-all duration-300;
+    @apply hover:shadow-xl transition-all duration-300 hover:scale-[1.01];
+  }
+
+  /* Enhanced shadows using your color palette */
+  .shadow-lavender {
+    box-shadow: 0 4px 20px rgba(157, 107, 206, 0.15);
+  }
+
+  .shadow-lavender-hover {
+    box-shadow: 0 8px 30px rgba(157, 107, 206, 0.25);
   }
 }
 
-/* Enhanced scrollbar */
+/* Enhanced scrollbar with your colors */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-50 dark:bg-slate-800;
+  @apply bg-muted;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-violet-300 dark:bg-violet-600 rounded-full;
+  background: rgb(157, 107, 206);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-violet-400 dark:bg-violet-500;
+  background: rgb(114, 103, 203);
 }
 
-/* Status-specific colors */
+/* Status-specific colors using your palette */
 .status-completed {
-  @apply bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/30 border-emerald-200 dark:border-emerald-700;
+  @apply bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20;
+  border-color: rgb(40, 199, 111);
 }
 
 .status-current {
-  @apply bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30 border-violet-200 dark:border-violet-600;
+  @apply bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20;
+  border-color: rgb(157, 107, 206);
 }
 
 .status-icon-completed {
-  @apply bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg;
+  background: linear-gradient(135deg, rgb(40, 199, 111), rgb(34, 197, 94));
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 199, 111, 0.3);
 }
 
 .status-icon-current {
-  @apply bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg animate-pulse;
+  background: linear-gradient(135deg, rgb(157, 107, 206), rgb(163, 147, 235));
+  color: white;
+  box-shadow: 0 4px 15px rgba(157, 107, 206, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Professional animations */
@@ -162,15 +186,61 @@
   }
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(157, 107, 206, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(157, 107, 206, 0.6);
+  }
+}
+
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out;
 }
 
-/* Professional shadows */
-.shadow-elegant {
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.1);
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .text-4xl {
+    @apply text-2xl;
+  }
+  
+  .text-3xl {
+    @apply text-xl;
+  }
+  
+  .py-12 {
+    @apply py-6;
+  }
+  
+  .gap-8 {
+    @apply gap-4;
+  }
 }
 
-.shadow-elegant-hover {
-  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
+/* Heart animation for footer */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
 }

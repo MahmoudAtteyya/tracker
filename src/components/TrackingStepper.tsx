@@ -21,11 +21,11 @@ interface TrackingStepperProps {
 const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
   const getStepIcon = (step: TrackingStep, index: number) => {
     if (step.isCompleted) {
-      return <Check className="w-6 h-6 text-white" />;
+      return <Check className="w-5 h-5 md:w-6 md:h-6 text-white" />;
     } else if (step.isCurrent) {
-      return <Clock className="w-6 h-6 text-white" />;
+      return <Clock className="w-5 h-5 md:w-6 md:h-6 text-white" />;
     } else {
-      return index % 2 === 0 ? <Package className="w-6 h-6" /> : <Truck className="w-6 h-6" />;
+      return index % 2 === 0 ? <Package className="w-5 h-5 md:w-6 md:h-6" /> : <Truck className="w-5 h-5 md:w-6 md:h-6" />;
     }
   };
 
@@ -33,27 +33,27 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     if (step.isCompleted) {
       return {
         circle: 'status-icon-completed',
-        line: 'bg-gradient-to-b from-emerald-300 to-green-300',
+        line: 'bg-gradient-to-b from-green-300 to-emerald-400',
         card: 'status-completed'
       };
     } else if (step.isCurrent) {
       return {
         circle: 'status-icon-current',
-        line: 'bg-gradient-to-b from-violet-300 to-purple-300',
+        line: 'bg-gradient-to-b from-purple-300 to-violet-400',
         card: 'status-current'
       };
     } else {
       return {
-        circle: 'bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400',
-        line: 'bg-slate-200 dark:bg-slate-700',
-        card: 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+        circle: 'bg-muted text-muted-foreground',
+        line: 'bg-muted',
+        card: 'bg-muted/30 border-muted'
       };
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="space-y-8">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="space-y-6 md:space-y-8">
         {steps.map((step, index) => {
           const styles = getStepStyles(step);
           const isLast = index === steps.length - 1;
@@ -62,57 +62,53 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
             <div key={step.id} className="relative animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
               {/* خط الربط */}
               {!isLast && (
-                <div className="absolute right-7 top-20 w-1 h-20 -mr-px">
+                <div className="absolute right-6 md:right-7 top-16 md:top-20 w-0.5 md:w-1 h-16 md:h-20 -mr-px">
                   <div className={`w-full h-full ${styles.line} transition-all duration-700 rounded-full`} />
                 </div>
               )}
 
               {/* محتوى الخطوة */}
-              <div className="flex items-start space-x-6 space-x-reverse">
+              <div className="flex items-start gap-4 md:gap-6">
                 {/* دائرة الخطوة */}
-                <div className={`relative flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} shadow-elegant`}>
+                <div className={`relative flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} shadow-lavender`}>
                   {getStepIcon(step, index)}
                   {step.isCurrent && (
-                    <div className="absolute inset-0 rounded-full border-4 border-violet-200 animate-ping opacity-20"></div>
+                    <div className="absolute inset-0 rounded-full border-2 md:border-4 border-primary/20 animate-ping opacity-20"></div>
                   )}
                 </div>
 
                 {/* تفاصيل الخطوة */}
-                <div className={`flex-1 p-8 rounded-2xl border-2 transition-all duration-500 professional-card-hover ${styles.card} shadow-elegant hover:shadow-elegant-hover`}>
-                  <div className="flex flex-col gap-6 text-right">
+                <div className={`flex-1 p-4 md:p-8 rounded-xl md:rounded-2xl border-2 transition-all duration-500 professional-card-hover ${styles.card} shadow-lavender hover:shadow-lavender-hover`}>
+                  <div className="flex flex-col gap-4 md:gap-6 text-right">
                     <div className="flex-1">
-                      <div className="flex flex-col gap-3 mb-4">
-                        <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 arabic leading-relaxed">
-                          {step.status}
-                        </h3>
-                        <span className="text-lg text-violet-600 dark:text-violet-400 font-medium arabic leading-relaxed">
+                      <div className="flex flex-col gap-2 md:gap-3 mb-3 md:mb-4">
+                        <h3 className="text-lg md:text-xl font-bold text-foreground arabic leading-relaxed">
                           {step.statusArabic}
+                        </h3>
+                        <span className="text-sm md:text-base text-primary font-medium arabic leading-relaxed">
+                          {step.description}
                         </span>
                       </div>
                       
-                      <p className="text-base text-slate-600 dark:text-slate-300 mb-6 leading-loose arabic">
-                        {step.description}
-                      </p>
-                      
                       {step.location && (
-                        <div className="flex items-center justify-end gap-3 mb-4">
-                          <span className="text-base font-medium text-slate-700 dark:text-slate-200 arabic">
+                        <div className="flex items-center justify-end gap-2 md:gap-3 mb-3 md:mb-4">
+                          <span className="text-sm md:text-base font-medium text-foreground arabic">
                             {step.location}
                           </span>
-                          <div className="w-3 h-3 bg-violet-500 rounded-full shadow-sm" />
+                          <div className="w-2 h-2 md:w-3 md:h-3 bg-primary rounded-full shadow-sm" />
                         </div>
                       )}
                     </div>
 
                     {(step.date || step.time) && (
-                      <div className="flex flex-col items-end text-right border-t-2 border-slate-100 dark:border-slate-700 pt-6">
+                      <div className="flex flex-col items-end text-right border-t-2 border-border pt-4 md:pt-6">
                         {step.date && (
-                          <div className="text-lg font-semibold text-slate-800 dark:text-slate-100 arabic mb-1">
+                          <div className="text-base md:text-lg font-semibold text-foreground arabic mb-1">
                             {step.date}
                           </div>
                         )}
                         {step.time && (
-                          <div className="text-base text-slate-500 dark:text-slate-400 arabic">
+                          <div className="text-sm md:text-base text-muted-foreground arabic">
                             {step.time}
                           </div>
                         )}
