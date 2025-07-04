@@ -15,7 +15,7 @@ const TrackingPage = () => {
 
   useEffect(() => {
     if (barcode) {
-      document.title = `Tracking ${barcode} - Tataabu Order Eliaa`;
+      document.title = `تتبع ${barcode} - Tataabu Order Eliaa`;
     }
   }, [barcode]);
 
@@ -23,13 +23,13 @@ const TrackingPage = () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       toast({
-        title: "Link Copied",
-        description: "Tracking link has been copied to clipboard",
+        title: "تم النسخ",
+        description: "تم نسخ رابط التتبع إلى الحافظة",
       });
     } catch (err) {
       toast({
-        title: "Copy Failed",
-        description: "Unable to copy link to clipboard",
+        title: "فشل النسخ",
+        description: "لم يتم نسخ الرابط",
         variant: "destructive",
       });
     }
@@ -39,12 +39,12 @@ const TrackingPage = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Track Package ${barcode}`,
-          text: `Track this package: ${barcode}`,
+          title: `تتبع الشحنة ${barcode}`,
+          text: `تتبع هذه الشحنة: ${barcode}`,
           url: window.location.href,
         });
       } catch (err) {
-        console.log('Share cancelled');
+        console.log('تم إلغاء المشاركة');
       }
     } else {
       handleCopyLink();
@@ -68,31 +68,31 @@ const TrackingPage = () => {
           <div className="max-w-2xl mx-auto">
             <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-8 transition-colors">
               <ArrowLeft className="w-4 h-4" />
-              Back to Search
+              العودة للبحث
             </Link>
             
-            <Card className="border-destructive/20 bg-destructive/5">
+            <Card className="professional-card border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-800">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <AlertCircle className="w-6 h-6 text-destructive" />
-                  <h2 className="text-xl font-semibold text-foreground">Tracking Information Not Found</h2>
+                  <AlertCircle className="w-6 h-6 text-red-500" />
+                  <h2 className="text-xl font-semibold text-foreground arabic">لم يتم العثور على معلومات التتبع</h2>
                 </div>
                 
-                <p className="text-muted-foreground mb-4">
-                  We couldn't find tracking information for: <span className="font-mono font-medium">{barcode}</span>
+                <p className="text-muted-foreground mb-4 arabic">
+                  لم نتمكن من العثور على معلومات تتبع للرقم: <span className="font-mono font-medium">{barcode}</span>
                 </p>
                 
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <p>Please check:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>The tracking number is entered correctly</li>
-                    <li>The package has been processed by Egypt Post</li>
-                    <li>Try again after some time if the package was recently shipped</li>
+                <div className="space-y-2 text-sm text-muted-foreground arabic">
+                  <p>يرجى التحقق من:</p>
+                  <ul className="list-disc list-inside space-y-1 mr-4">
+                    <li>أن رقم التتبع مُدخل بشكل صحيح</li>
+                    <li>أن الشحنة تم معالجتها من قبل البريد المصري</li>
+                    <li>المحاولة مرة أخرى لاحقاً إذا كانت الشحنة حديثة</li>
                   </ul>
                 </div>
 
                 <Button asChild className="mt-6">
-                  <Link to="/">Try Another Tracking Number</Link>
+                  <Link to="/">جرب رقم تتبع آخر</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -110,49 +110,49 @@ const TrackingPage = () => {
           <div>
             <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-4 transition-colors">
               <ArrowLeft className="w-4 h-4" />
-              Back to Search
+              العودة للبحث
             </Link>
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-              Tracking Results
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground arabic">
+              نتائج التتبع
             </h1>
-            <p className="text-muted-foreground mt-1">
-              Package: <span className="font-mono font-medium">{barcode}</span>
+            <p className="text-muted-foreground mt-1 arabic">
+              الشحنة: <span className="font-mono font-medium">{barcode}</span>
             </p>
           </div>
 
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleCopyLink}>
-              <Copy className="w-4 h-4 mr-2" />
-              Copy Link
+              <Copy className="w-4 h-4 ml-2" />
+              نسخ الرابط
             </Button>
             <Button variant="outline" size="sm" onClick={handleShare}>
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
+              <Share2 className="w-4 h-4 ml-2" />
+              مشاركة
             </Button>
           </div>
         </div>
 
         {/* Status Overview */}
-        <Card className="mb-8">
+        <Card className="mb-8 professional-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-lavender-500 rounded-full animate-pulse" />
-              Current Status: {data.status}
+            <CardTitle className="flex items-center gap-3 arabic">
+              <div className="w-3 h-3 bg-violet-500 rounded-full animate-pulse" />
+              الحالة الحالية: {data.status}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">
-              Your package is currently being processed. Check the detailed timeline below for more information.
+            <p className="text-muted-foreground arabic">
+              شحنتك قيد المعالجة حالياً. تحقق من الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.
             </p>
           </CardContent>
         </Card>
 
         {/* Tracking Timeline */}
-        <Card>
+        <Card className="professional-card">
           <CardHeader>
-            <CardTitle>Tracking Timeline</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Follow your package journey from origin to destination
+            <CardTitle className="arabic">الجدول الزمني للتتبع</CardTitle>
+            <p className="text-sm text-muted-foreground arabic">
+              تابع رحلة شحنتك من نقطة الإرسال إلى الوجهة
             </p>
           </CardHeader>
           <CardContent>
