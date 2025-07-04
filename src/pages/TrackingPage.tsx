@@ -10,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 
 const TrackingPage = () => {
   const { barcode } = useParams<{ barcode: string }>();
-  const { data, loading, error } = useTracking(barcode);
+  const { data, loading, error, retryCount, isRetrying } = useTracking(barcode);
 
   useEffect(() => {
     if (barcode) {
@@ -53,7 +53,11 @@ const TrackingPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background text-foreground relative">
-        <LoadingSpinner />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <LoadingSpinner />
+          </div>
+        </div>
       </div>
     );
   }
@@ -76,7 +80,7 @@ const TrackingPage = () => {
                 </div>
                 
                 <p className="text-muted-foreground mb-4 md:mb-6 text-base md:text-lg arabic leading-relaxed">
-                  لم نتمكن من العثور على معلومات تتبع للرقم: <span className="font-mono font-bold text-accent-purple break-all">{barcode}</span>
+                  {error || `لم نتمكن من العثور على معلومات تتبع للرقم: ${barcode}`}
                 </p>
                 
                 <div className="space-y-3 text-sm md:text-base text-muted-foreground arabic">
@@ -88,9 +92,24 @@ const TrackingPage = () => {
                   </ul>
                 </div>
 
-                            <Button asChild className="mt-6 md:mt-8 text-base md:text-lg py-4 md:py-6 px-6 md:px-8 w-full sm:w-auto bg-gradient-to-r from-accent-purple to-deep-lavender hover:from-deep-lavender hover:to-dark-purple text-white border-0">
-              <Link to="/">جرب رقم تتبع آخر</Link>
-            </Button>
+                <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-8">
+                  <Button asChild className="text-base md:text-lg py-4 md:py-6 px-6 md:px-8 flex-1 bg-gradient-to-r from-accent-purple to-deep-lavender hover:from-deep-lavender hover:to-dark-purple text-white border-0">
+                    <a
+                      href="https://egyptpost.gov.eg/ar-eg/home/eservices/track-and-trace/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      تتبع من الموقع الرسمي
+                    </a>
+                  </Button>
+                  <Button 
+                    onClick={() => window.location.reload()} 
+                    variant="outline"
+                    className="text-base md:text-lg py-4 md:py-6 px-6 md:px-8 flex-1"
+                  >
+                    إعادة المحاولة
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

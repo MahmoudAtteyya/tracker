@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from '@/hooks/use-toast';
 
@@ -22,7 +21,7 @@ interface TrackingData {
 }
 
 interface ApiResponse {
-  data: {
+  data?: {
     barcode: string;
     case: number;
     data: Array<{
@@ -37,141 +36,221 @@ interface ApiResponse {
       isCurrent: boolean;
       isFinished: boolean;
     }>;
+    error?: string;
   };
   success: boolean;
-  errorMessages: string[];
+  errorMessages?: string[];
+  error?: string;
 }
+
+// دالة للكشف عن صفحة Cloudflare
+const isCloudflareChallenge = (text: string): boolean => {
+  return text.includes('Just a moment') || 
+         text.includes('cf_chl_') || 
+         text.includes('challenge-platform') ||
+         text.includes('Cloudflare') ||
+         text.includes('<!DOCTYPE html>') ||
+         text.includes('<html');
+};
+
+// دالة للكشف عن استجابة JSON صحيحة
+const isValidJsonResponse = (text: string): boolean => {
+  try {
+    const parsed = JSON.parse(text);
+    return typeof parsed === 'object' && parsed !== null;
+  } catch {
+    return false;
+  }
+};
+
+// دالة للانتظار مع تأخير متزايد
+const delay = (ms: number): Promise<void> => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
 
 export const useTracking = (barcode: string | undefined) => {
   const [data, setData] = useState<TrackingData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
     if (!barcode) return;
 
-    const fetchTrackingData = async () => {
+    const fetchTrackingData = async (attempt: number = 1, baseDelay: number = 1000) => {
+      // زيادة التأخير الأساسي إذا كانت المحاولة الأولى بطيئة
+      if (attempt === 1) {
+        baseDelay = 3000; // تأخير أطول للمحاولة الأولى
+      } else if (attempt === 2) {
+        baseDelay = 8000; // تأخير أطول للمحاولة الثانية
+      } else if (attempt === 3) {
+        baseDelay = 15000; // تأخير أطول للمحاولة الثالثة
+      } else {
+        baseDelay = 25000; // تأخير أطول للمحاولات اللاحقة
+      }
       setLoading(true);
       setError(null);
+      setRetryCount(attempt - 1);
+      setIsRetrying(attempt > 1);
 
       try {
-        // حفظ في localStorage للبحث الأخير
-        const recentSearches = JSON.parse(localStorage.getItem('recentTrackingSearches') || '[]');
-        const updatedSearches = [barcode, ...recentSearches.filter((item: string) => item !== barcode)].slice(0, 5);
-        localStorage.setItem('recentTrackingSearches', JSON.stringify(updatedSearches));
+        const startTime = Date.now();
+        
+        // إنشاء AbortController للتحكم في timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 ثانية timeout
 
-        console.log('جاري تتبع الشحنة:', barcode);
-
-        // محاولة جلب البيانات من API الحقيقي
-        try {
-          const response = await fetch(
-            `https://egyptpost.gov.eg/ar-EG/TrackTrace/GetShipmentDetails?barcode=${barcode}`,
-            {
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-
-          if (response.ok) {
-            const result: ApiResponse = await response.json();
-            console.log('استجابة API:', result);
-            
-            if (result.success && result.data) {
-              // فلترة البيانات لإظهار المكتملة والحالية فقط
-              const filteredData = result.data.data.filter(item => 
-                item.isFinished || item.isCurrent
-              );
-
-              const currentItem = result.data.data.find(item => item.isCurrent);
-              const currentStatus = currentItem?.mainStatus || 'غير محدد';
-
-              const transformedData: TrackingData = {
-                barcode: result.data.barcode,
-                status: currentStatus,
-                currentStatus: currentStatus,
-                steps: filteredData.map((item, index) => ({
-                  id: `step-${item.status}`,
-                  status: item.mainStatus || 'غير محدد',
-                  statusArabic: item.itemStatus || 'غير محدد',
-                  date: item.date || '',
-                  time: item.time || '',
-                  location: item.location ? `${item.location}${item.city ? '، ' + item.city : ''}${item.country ? '، ' + item.country : ''}` : '',
-                  description: item.itemStatus || 'لا توجد تفاصيل متاحة',
-                  isCompleted: item.isFinished,
-                  isCurrent: item.isCurrent,
-                }))
-              };
-              
-              setData(transformedData);
-              return;
-            }
+        const response = await fetch(
+          `http://localhost:3001/api/track/${barcode}`,
+          {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
           }
-        } catch (corsError) {
-          console.log('خطأ CORS، استخدام البيانات التجريبية:', corsError);
+        );
+
+        clearTimeout(timeoutId);
+
+        const responseTime = Date.now() - startTime;
+        const responseText = await response.text();
+
+        console.log(`محاولة ${attempt}: طول الاستجابة ${responseText.length} حرف`);
+
+        // التحقق من أن الاستجابة JSON صحيحة
+        if (!isValidJsonResponse(responseText)) {
+          console.log('استجابة غير صحيحة من الخادم المحلي، محاولة إعادة المحاولة...');
+          console.log('بداية الاستجابة:', responseText.substring(0, 300));
+          
+          if (attempt <= 3) {
+            const waitTime = baseDelay + (attempt * 3000);
+            console.log(`انتظار ${waitTime}ms قبل المحاولة التالية...`);
+            await delay(waitTime);
+            return fetchTrackingData(attempt + 1, baseDelay);
+          } else {
+            setError('استجابة غير صحيحة من الخادم المحلي. تأكد من تشغيل الخادم على المنفذ 3001.');
+            setLoading(false);
+            setIsRetrying(false);
+            return;
+          }
         }
 
-        // البيانات التجريبية عند فشل CORS - إظهار المكتملة والحالية فقط
-        console.log('استخدام البيانات التجريبية للرقم:', barcode);
-        const mockData: TrackingData = {
-          barcode,
-          status: 'في المعالجة البريدية',
-          currentStatus: 'في المعالجة البريدية',
-          steps: [
-            {
-              id: '1',
-              status: 'تم تسجيل الشحنة',
-              statusArabic: 'جاري التجهيز للشحن',
-              date: '29 يونيو 2025',
-              time: '09:36 صباحاً',
-              location: 'المركز اللوجيستى بالسويس، السويس، مصر',
-              description: 'تم تسجيل الشحنة بنجاح وجاري التجهيز للشحن',
-              isCompleted: true,
-              isCurrent: false,
-            },
-            {
-              id: '2',
-              status: 'تم استلام الشحنة',
-              statusArabic: 'تم استلام الشحنه من الجهة',
-              date: '29 يونيو 2025',
-              time: '12:27 مساءً',
-              location: 'المركز اللوجيستى بالسويس، السويس، مصر',
-              description: 'تم استلام الشحنة من الجهة المرسلة بنجاح',
-              isCompleted: true,
-              isCurrent: false,
-            },
-            {
-              id: '3',
-              status: 'في المعالجة البريدية',
-              statusArabic: 'تم وصول الشحنة الى المكتب',
-              date: '30 يونيو 2025',
-              time: '03:54 مساءً',
-              location: 'هاب توزيع شمال أكتوبر، الجيزة، مصر',
-              description: 'تم وصول الشحنة إلى المكتب وجاري المعالجة',
-              isCompleted: false,
-              isCurrent: true,
-            }
-          ]
-        };
+        // محاولة تحليل الاستجابة كـ JSON
+        let result: ApiResponse;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.log('فشل في تحليل JSON:', responseText.substring(0, 200));
+          setError('استجابة غير صحيحة من الخادم المحلي. تأكد من تشغيل الخادم على المنفذ 3001.');
+          setLoading(false);
+          setIsRetrying(false);
+          return;
+        }
 
-        setData(mockData);
+        // التحقق من نجاح الاستجابة
+        if (result.success && result.data && Array.isArray(result.data.data) && result.data.data.length > 0) {
+          const filteredData = result.data.data.filter(item => 
+            item.isFinished || item.isCurrent
+          );
+
+          const currentItem = result.data.data.find(item => item.isCurrent);
+          const currentStatus = currentItem?.mainStatus || 'غير محدد';
+
+          const transformedData: TrackingData = {
+            barcode: result.data.barcode,
+            status: currentStatus,
+            currentStatus: currentStatus,
+            steps: filteredData.map((item, index) => ({
+              id: `step-${item.status}`,
+              status: item.mainStatus || 'غير محدد',
+              statusArabic: item.itemStatus || 'غير محدد',
+              date: item.date || '',
+              time: item.time || '',
+              location: item.location ? `${item.location}${item.city ? '، ' + item.city : ''}${item.country ? '، ' + item.country : ''}` : '',
+              description: item.itemStatus || 'لا توجد تفاصيل متاحة',
+              isCompleted: item.isFinished,
+              isCurrent: item.isCurrent,
+            }))
+          };
+
+          setData(transformedData);
+          setLoading(false);
+          setIsRetrying(false);
+          
+          // عرض رسالة نجاح مع وقت الاستجابة
+          if (responseTime > 3000) {
+            toast({
+              title: "تم جلب البيانات بنجاح",
+              description: `تم العثور على ${transformedData.steps.length} خطوة تتبع (${responseTime}ms)`,
+            });
+          }
+          
+        } else {
+          console.log('استجابة API غير ناجحة:', result);
+          
+          // إذا لم تنجح المحاولة وكانت المحاولة الأولى، جرب مرة أخرى
+          if (attempt === 1 && response.ok) {
+            console.log('المحاولة الأولى فشلت، جاري المحاولة مرة أخرى...');
+            await delay(8000); // تأخير أطول للمحاولة الثانية
+            return fetchTrackingData(2, baseDelay);
+          }
+          
+          // إذا كانت الاستجابة تحتوي على خطأ محدد
+          if (result.error) {
+            if (result.error === 'No data found') {
+              setError('لم يتم العثور على معلومات التتبع لهذا الرقم. تأكد من صحة الرقم أو أن الشحنة لم يتم معالجتها بعد.');
+            } else {
+              setError(`خطأ في الخادم: ${result.error}`);
+            }
+          } else if (result.data?.error) {
+            if (result.data.error === 'لم يتمكن من قراءة البيانات') {
+              setError('فشل في قراءة البيانات من الخادم. يرجى المحاولة مرة أخرى بعد قليل.');
+            } else {
+              setError(`خطأ في البيانات: ${result.data.error}`);
+            }
+          } else {
+            setError('لم يتم العثور على معلومات التتبع لهذا الرقم');
+          }
+          
+          setLoading(false);
+          setIsRetrying(false);
+        }
+
       } catch (err) {
-        console.error('خطأ في التتبع:', err);
-        setError('حدث خطأ في تتبع الشحنة. يرجى المحاولة مرة أخرى.');
-        toast({
-          title: "خطأ في التتبع",
-          description: "حدث خطأ في تتبع الشحنة. يرجى المحاولة مرة أخرى.",
-          variant: "destructive",
-        });
-      } finally {
+        console.error('خطأ في جلب البيانات:', err);
+        
+        // إذا كان خطأ timeout
+        if (err instanceof Error && err.name === 'AbortError') {
+          if (attempt <= 3) {
+            console.log(`timeout في المحاولة ${attempt}، جاري المحاولة مرة أخرى...`);
+            await delay(baseDelay + (attempt * 5000));
+            return fetchTrackingData(attempt + 1, baseDelay);
+          } else {
+            setError('انتهت مهلة الاتصال. تأكد من أن الخادم يعمل على المنفذ 3001.');
+            setLoading(false);
+            setIsRetrying(false);
+            return;
+          }
+        }
+        
+        // إذا كان خطأ في الشبكة، جرب مرة أخرى
+        if (attempt <= 3) {
+          console.log(`خطأ في الشبكة، محاولة ${attempt + 1}...`);
+          await delay(baseDelay + (attempt * 5000));
+          return fetchTrackingData(attempt + 1, baseDelay);
+        }
+        
+        setError('فشل في الاتصال بالخادم المحلي. تأكد من تشغيل الخادم على المنفذ 3001.');
         setLoading(false);
+        setIsRetrying(false);
       }
     };
 
     fetchTrackingData();
   }, [barcode]);
 
-  return { data, loading, error };
+  return { data, loading, error, retryCount, isRetrying };
 };
