@@ -21,13 +21,26 @@ async function fetchTrackingData(barcode) {
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
       '--disable-features=TranslateUI',
-      '--disable-ipc-flooding-protection'
-    ]
+      '--disable-ipc-flooding-protection',
+      '--disable-extensions',
+      '--disable-plugins',
+      '--disable-images',
+      '--disable-javascript',
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor',
+      '--memory-pressure-off',
+      '--max_old_space_size=4096'
+    ],
+    ignoreDefaultArgs: ['--disable-extensions'],
+    timeout: 30000
   });
   
   const page = await browser.newPage();
 
-  await page.goto(mainUrl, { waitUntil: 'networkidle2' });
+  // Set user agent to avoid detection
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+
+  await page.goto(mainUrl, { waitUntil: 'networkidle2', timeout: 30000 });
 
   // انتظر حتى يظهر حقل الإدخال ثم اكتب فيه
   await page.waitForSelector('input.input0', { timeout: 15000 });

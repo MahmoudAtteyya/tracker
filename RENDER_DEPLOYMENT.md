@@ -4,7 +4,8 @@
 
 ### Build Command
 ```bash
-npm install && npm run build
+npm install
+npm run build
 ```
 
 ### Start Command
@@ -17,7 +18,7 @@ npm start
 
 ## Render Configuration
 
-1. **Build Command**: `npm install && npm run build`
+1. **Build Command**: `npm install` (سيقوم تلقائيًا بتثبيت Chrome)
 2. **Start Command**: `npm start`
 3. **Environment**: Node.js
 4. **Region**: Choose closest to your users

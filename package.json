@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "server": "node server.cjs",
     "start": "node server.cjs",
+    "postinstall": "npx puppeteer browsers install chrome",
     "build:render": "npm install && npm run build",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
