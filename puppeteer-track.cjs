@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer-extra');
-const puppeteerCore = require('puppeteer-core');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
@@ -9,10 +8,9 @@ async function fetchTrackingData(barcode) {
   try {
     console.log(`Starting Puppeteer for barcode: ${barcode}`);
     
-    // Configure Puppeteer for Render environment with Chrome installation
-    const launchOptions = {
+    // Configure Puppeteer for Render environment
+    const browser = await puppeteer.launch({
       headless: true,
-      executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome-stable',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -37,11 +35,7 @@ async function fetchTrackingData(barcode) {
       ],
       ignoreDefaultArgs: ['--disable-extensions'],
       timeout: 60000
-    };
-
-    console.log(`Using Chrome at: ${launchOptions.executablePath}`);
-    
-    const browser = await puppeteer.launch(launchOptions);
+    });
     
     console.log('Browser launched successfully');
     

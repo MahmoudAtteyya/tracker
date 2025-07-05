@@ -4,7 +4,7 @@
 
 ### Build Command
 ```bash
-chmod +x install-chrome.sh && ./install-chrome.sh && npm install && npm run build
+npm install && npm run build
 ```
 
 ### Start Command
@@ -14,11 +14,10 @@ npm start
 
 ### Environment Variables
 - `PORT`: Set to 10000 (or let Render auto-assign)
-- `CHROME_BIN`: Set to `/usr/bin/google-chrome-stable`
 
 ## Render Configuration
 
-1. **Build Command**: `chmod +x install-chrome.sh && ./install-chrome.sh && npm install && npm run build`
+1. **Build Command**: `npm install && npm run build`
 2. **Start Command**: `npm start`
 3. **Environment**: Node.js
 4. **Region**: Choose closest to your users
@@ -27,7 +26,6 @@ npm start
 
 Add these environment variables in your Render service settings:
 
-- `CHROME_BIN` = `/usr/bin/google-chrome-stable`
 - `NODE_ENV` = `production`
 
 ## How it works
