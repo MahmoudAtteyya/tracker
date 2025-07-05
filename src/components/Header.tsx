@@ -51,7 +51,7 @@ const Header = () => {
               <span className={`text-xs lg:text-sm transition-all duration-300 ${
                 isScrolled ? 'text-gray-600 dark:text-gray-300' : 'text-white/90'
               }`}>
-                Eliaa Tracking
+                ELliaa Tracking
               </span>
             </div>
           </Link>
