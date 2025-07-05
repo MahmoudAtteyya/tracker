@@ -25,6 +25,17 @@ app.get('/api/track/:barcode', async (req, res) => {
 
     const data = await fetchTrackingData(barcode);
 
+    // Check if it's a Puppeteer error
+    if (data && data.error === 'Puppeteer initialization failed') {
+      console.error('Puppeteer failed:', data.message);
+      return res.status(500).json({
+        success: false,
+        error: 'Puppeteer initialization failed',
+        message: data.message,
+        details: data.details
+      });
+    }
+
     if (data && data.success) {
       res.json(data);
     } else {
