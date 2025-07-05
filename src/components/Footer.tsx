@@ -23,7 +23,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md arabic">
-              منصة تتبع الشحنات المصرية المتطورة، نقدم لك خدمة تتبع فورية ودقيقة لجميع شحناتك
+              موقع تتبع الشحنات من إيلياء، نقدم لك خدمة تتبع فورية ودقيقة لجميع شحناتك
             </p>
             <div className="flex items-center gap-4">
               <a href="https://www.facebook.com/elliaa10" target="_blank" rel="noopener noreferrer" className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110">

@@ -17,7 +17,7 @@ const About = () => {
             إيلياء للتتبع
           </h1>
           <h2 className="text-2xl lg:text-3xl font-semibold mb-8 arabic bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
-            منصة تتبع الشحنات المصرية المتطورة
+            موقع تتبع شحنات إيلياء
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed arabic">
             نقدم خدمة تتبع احترافية للشحنات مع تحديثات فورية ومعلومات شاملة عن التوصيل 
@@ -50,7 +50,7 @@ const About = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 dark:text-gray-300 arabic">
-                معلومات التتبع الخاصة بك آمنة ومصدرها من خدمات البريد الرسمية
+                معلومات التتبع الخاصة بك آمنة 
               </p>
             </CardContent>
           </Card>
@@ -95,7 +95,7 @@ const About = () => {
             <div className="max-w-4xl mx-auto text-center space-y-6">
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed arabic">
                 في إيلياء للتتبع، نؤمن بأن تتبع الطرود يجب أن يكون بسيطاً وموثوقاً ومتاحاً للجميع. 
-                مهمتنا هي توفير أشمل وأسهل تجربة تتبع شحنات في مصر والمنطقة العربية.
+                مهمتنا هي توفير أشمل وأسهل تجربة تتبع شحنات في مصر .
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed arabic">
                 نسعى لتقديم خدمة متميزة تساعد المستخدمين على متابعة شحناتهم بسهولة ووضوح، 
