@@ -23,7 +23,7 @@ app.get('/api/track/:barcode', async (req, res) => {
 
     console.log(`Proxying request for barcode: ${barcode}`);
 
-    const response = await fetch(`http://13.62.20.169:3000/track/${barcode}`, {
+    const response = await fetch(`http://13.61.183.16:3000/track/${barcode}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
