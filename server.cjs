@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fetchTrackingData = require('./puppeteer-track.cjs');
+const fetchTrackingData = require('./fetch-track.cjs');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,16 +21,16 @@ app.get('/api/track/:barcode', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Barcode is required' });
     }
 
-    console.log(`Fetching tracking data for barcode: ${barcode} (via Puppeteer)`);
+    console.log(`Fetching tracking data for barcode: ${barcode} (via direct fetch)`);
 
     const data = await fetchTrackingData(barcode);
 
-    // Check if it's a Puppeteer error
-    if (data && data.error === 'Puppeteer initialization failed') {
-      console.error('Puppeteer failed:', data.message);
+    // Check if it's a fetch error
+    if (data && data.error === 'Fetch failed') {
+      console.error('Fetch failed:', data.message);
       return res.status(500).json({
         success: false,
-        error: 'Puppeteer initialization failed',
+        error: 'Fetch failed',
         message: data.message,
         details: data.details
       });
@@ -45,7 +45,7 @@ app.get('/api/track/:barcode', async (req, res) => {
     console.error(`Error fetching tracking data for ${req.params.barcode}:`, error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch tracking data (Puppeteer)',
+      error: 'Failed to fetch tracking data',
       message: error.message
     });
   }
