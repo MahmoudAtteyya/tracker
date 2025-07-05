@@ -102,7 +102,7 @@ export const useTracking = (barcode: string | undefined) => {
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 ثانية timeout
 
         const response = await fetch(
-          `http://51.20.44.4:3000/track/${barcode}`,
+          `/api/track/${barcode}`,
           {
             method: 'GET',
             headers: {
@@ -122,7 +122,7 @@ export const useTracking = (barcode: string | undefined) => {
 
         // التحقق من أن الاستجابة JSON صحيحة
         if (!isValidJsonResponse(responseText)) {
-          console.log('استجابة غير صحيحة من سيرفر التتبع، محاولة إعادة المحاولة...');
+          console.log('استجابة غير صحيحة من الخادم، محاولة إعادة المحاولة...');
           console.log('بداية الاستجابة:', responseText.substring(0, 300));
           
           if (attempt <= 3) {
@@ -131,7 +131,7 @@ export const useTracking = (barcode: string | undefined) => {
             await delay(waitTime);
             return fetchTrackingData(attempt + 1, baseDelay);
           } else {
-            setError('استجابة غير صحيحة من سيرفر التتبع. يرجى المحاولة مرة أخرى.');
+            setError('استجابة غير صحيحة من الخادم. يرجى المحاولة مرة أخرى.');
             setLoading(false);
             setIsRetrying(false);
             return;
@@ -144,7 +144,7 @@ export const useTracking = (barcode: string | undefined) => {
           result = JSON.parse(responseText);
         } catch (parseError) {
           console.log('فشل في تحليل JSON:', responseText.substring(0, 200));
-          setError('استجابة غير صحيحة من سيرفر التتبع. يرجى المحاولة مرة أخرى.');
+          setError('استجابة غير صحيحة من الخادم. يرجى المحاولة مرة أخرى.');
           setLoading(false);
           setIsRetrying(false);
           return;
@@ -203,11 +203,11 @@ export const useTracking = (barcode: string | undefined) => {
             if (result.error === 'No data found') {
               setError('لم يتم العثور على معلومات التتبع لهذا الرقم. تأكد من صحة الرقم أو أن الشحنة لم يتم معالجتها بعد.');
             } else {
-              setError(`خطأ في سيرفر التتبع: ${result.error}`);
+              setError(`خطأ في الخادم: ${result.error}`);
             }
           } else if (result.data?.error) {
             if (result.data.error === 'لم يتمكن من قراءة البيانات') {
-              setError('فشل في قراءة البيانات من سيرفر التتبع. يرجى المحاولة مرة أخرى بعد قليل.');
+              setError('فشل في قراءة البيانات من الخادم. يرجى المحاولة مرة أخرى بعد قليل.');
             } else {
               setError(`خطأ في البيانات: ${result.data.error}`);
             }
@@ -243,7 +243,7 @@ export const useTracking = (barcode: string | undefined) => {
           return fetchTrackingData(attempt + 1, baseDelay);
         }
         
-        setError('فشل في الاتصال بسيرفر التتبع. يرجى المحاولة مرة أخرى.');
+        setError('فشل في الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
         setLoading(false);
         setIsRetrying(false);
       }
