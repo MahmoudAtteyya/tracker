@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "server": "node server.cjs",
     "start": "node server.cjs",
-    "build:render": "chmod +x build.sh && ./build.sh",
+    "build:render": "npm install && npm run build",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
@@ -55,7 +55,7 @@
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "node-fetch": "^2.7.0",
-    "puppeteer-core": "^24.11.2",
+    "puppeteer": "^24.11.2",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "^18.3.1",

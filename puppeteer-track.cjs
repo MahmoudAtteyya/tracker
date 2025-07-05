@@ -1,13 +1,12 @@
 const puppeteer = require('puppeteer-extra');
-const puppeteerCore = require('puppeteer-core');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
 async function fetchTrackingData(barcode) {
   const mainUrl = 'https://egyptpost.gov.eg/ar-eg/home/eservices/track-and-trace/';
   
-  // Configure Puppeteer for different environments
-  const launchOptions = {
+  // Configure Puppeteer for Render environment
+  const browser = await puppeteer.launch({
     headless: true,
     args: [
       '--no-sandbox',
@@ -24,38 +23,7 @@ async function fetchTrackingData(barcode) {
       '--disable-features=TranslateUI',
       '--disable-ipc-flooding-protection'
     ]
-  };
-
-  // Try to use system Chrome if available
-  const possibleChromePaths = [
-    process.env.CHROME_BIN,
-    '/usr/bin/google-chrome-stable',
-    '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/chromium'
-  ];
-
-  for (const chromePath of possibleChromePaths) {
-    if (chromePath) {
-      try {
-        const fs = require('fs');
-        if (fs.existsSync(chromePath)) {
-          launchOptions.executablePath = chromePath;
-          console.log(`Using Chrome at: ${chromePath}`);
-          break;
-        }
-      } catch (error) {
-        console.log(`Chrome not found at: ${chromePath}`);
-      }
-    }
-  }
-
-  // If no system Chrome found, let Puppeteer use its bundled version
-  if (!launchOptions.executablePath) {
-    console.log('No system Chrome found, using Puppeteer bundled Chrome');
-  }
-  
-  const browser = await puppeteer.launch(launchOptions);
+  });
   
   const page = await browser.newPage();
 
