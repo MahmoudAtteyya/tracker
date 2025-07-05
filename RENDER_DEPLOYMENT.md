@@ -30,14 +30,20 @@ Add these environment variables in your Render service settings:
 
 ## How it works
 
-The app now uses the standard `puppeteer` package which includes a bundled Chrome browser, eliminating the need to install Chrome separately in the Render environment.
+The app now uses an external tracking server at `http://51.20.44.4:3000/track/` to fetch shipment data, eliminating the need for Puppeteer and Chrome installation in the Render environment.
+
+## API Endpoint
+
+The app connects to: `http://51.20.44.4:3000/track/{barcode}`
+
+Example: `http://51.20.44.4:3000/track/ENO31557487EG`
 
 ## Troubleshooting
 
 If you encounter any issues:
 
-1. Check the build logs for any npm install errors
-2. Verify that the start command is `npm start`
-3. Make sure all dependencies are properly installed
+1. Check that the external tracking server is running
+2. Verify network connectivity to `51.20.44.4:3000`
+3. Check the browser console for any CORS or network errors
 
-The app should now work without requiring Chrome installation scripts. 
+The app should now work without requiring Puppeteer or Chrome installation. 

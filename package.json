@@ -9,9 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server.cjs",
-    "start": "node server.cjs",
-    "postinstall": "npx puppeteer browsers install chrome",
+    "start": "npm run build && npx serve -s dist -l 10000",
     "build:render": "npm install && npm run build",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
@@ -56,9 +54,8 @@
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "node-fetch": "^2.7.0",
-    "puppeteer": "^24.11.2",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "serve": "^14.2.1",
+
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
