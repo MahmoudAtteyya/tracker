@@ -102,12 +102,22 @@ export const useTracking = (barcode: string | undefined) => {
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 ثانية timeout
 
         const response = await fetch(
-          `/api/track/${barcode}`,
+          `https://egyptpost.gov.eg/ar-EG/TrackTrace/GetShipmentDetails?barcode=${barcode}`,
           {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
+              'Accept': 'application/json, text/javascript, */*; q=0.01',
+              'Accept-Language': 'ar,en-US;q=0.9,en;q=0.8',
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+              'Referer': 'https://egyptpost.gov.eg/ar-eg/home/eservices/track-and-trace/',
+              'X-Requested-With': 'XMLHttpRequest',
+              'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+              'sec-ch-ua-mobile': '?0',
+              'sec-ch-ua-platform': '"Windows"',
+              'sec-fetch-dest': 'empty',
+              'sec-fetch-mode': 'cors',
+              'sec-fetch-site': 'same-origin'
             },
             signal: controller.signal,
           }
@@ -122,7 +132,7 @@ export const useTracking = (barcode: string | undefined) => {
 
         // التحقق من أن الاستجابة JSON صحيحة
         if (!isValidJsonResponse(responseText)) {
-          console.log('استجابة غير صحيحة من الخادم، محاولة إعادة المحاولة...');
+          console.log('استجابة غير صحيحة من مصر للبريد، محاولة إعادة المحاولة...');
           console.log('بداية الاستجابة:', responseText.substring(0, 300));
           
           if (attempt <= 3) {
@@ -131,7 +141,7 @@ export const useTracking = (barcode: string | undefined) => {
             await delay(waitTime);
             return fetchTrackingData(attempt + 1, baseDelay);
           } else {
-            setError('استجابة غير صحيحة من الخادم. يرجى المحاولة مرة أخرى.');
+            setError('استجابة غير صحيحة من مصر للبريد. يرجى المحاولة مرة أخرى.');
             setLoading(false);
             setIsRetrying(false);
             return;
@@ -144,7 +154,7 @@ export const useTracking = (barcode: string | undefined) => {
           result = JSON.parse(responseText);
         } catch (parseError) {
           console.log('فشل في تحليل JSON:', responseText.substring(0, 200));
-          setError('استجابة غير صحيحة من الخادم. يرجى المحاولة مرة أخرى.');
+          setError('استجابة غير صحيحة من مصر للبريد. يرجى المحاولة مرة أخرى.');
           setLoading(false);
           setIsRetrying(false);
           return;
@@ -203,11 +213,11 @@ export const useTracking = (barcode: string | undefined) => {
             if (result.error === 'No data found') {
               setError('لم يتم العثور على معلومات التتبع لهذا الرقم. تأكد من صحة الرقم أو أن الشحنة لم يتم معالجتها بعد.');
             } else {
-              setError(`خطأ في الخادم: ${result.error}`);
+              setError(`خطأ في مصر للبريد: ${result.error}`);
             }
           } else if (result.data?.error) {
             if (result.data.error === 'لم يتمكن من قراءة البيانات') {
-              setError('فشل في قراءة البيانات من الخادم. يرجى المحاولة مرة أخرى بعد قليل.');
+              setError('فشل في قراءة البيانات من مصر للبريد. يرجى المحاولة مرة أخرى بعد قليل.');
             } else {
               setError(`خطأ في البيانات: ${result.data.error}`);
             }
@@ -243,7 +253,7 @@ export const useTracking = (barcode: string | undefined) => {
           return fetchTrackingData(attempt + 1, baseDelay);
         }
         
-        setError('فشل في الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
+        setError('فشل في الاتصال بمصر للبريد. يرجى المحاولة مرة أخرى.');
         setLoading(false);
         setIsRetrying(false);
       }
