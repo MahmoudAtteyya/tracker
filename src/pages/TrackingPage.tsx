@@ -178,7 +178,9 @@ const TrackingPage = () => {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed text-right">
-                شحنتك قيد المعالجة حالياً. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.
+                {data.currentStatus === 'تم التسليم'
+                  ? 'شحنتك تم تسليمها بنجاح. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'
+                  : 'شحنتك قيد المعالجة حالياً. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'}
               </p>
             </CardContent>
           </Card>
