@@ -156,11 +156,10 @@ export const useTracking = (barcode: string | undefined) => {
             item.isFinished || item.isCurrent
           );
 
-          // تحديد أحدث خطوة بناءً على التاريخ والوقت
+          // إيجاد الخطوة الأحدث (مع ترتيب الخطوات حسب التاريخ والوقت تنازليًا)
+          const stepsWithDate = result.data.data.filter(item => item.date && item.time);
           const parseDateTime = (dateStr: string | null, timeStr: string | null) => {
             if (!dateStr || !timeStr) return null;
-            // تحويل التاريخ العربي إلى تنسيق يمكن تحليله
-            // مثال: "19 يوليو 2025" => "2025-07-19"
             const months: Record<string, string> = {
               'يناير': '01', 'فبراير': '02', 'مارس': '03', 'أبريل': '04', 'مايو': '05', 'يونيو': '06',
               'يوليو': '07', 'أغسطس': '08', 'سبتمبر': '09', 'أكتوبر': '10', 'نوفمبر': '11', 'ديسمبر': '12',
@@ -169,7 +168,6 @@ export const useTracking = (barcode: string | undefined) => {
             if (!dateMatch) return null;
             const [_, day, monthAr, year] = dateMatch;
             const month = months[monthAr] || '01';
-            // تحويل الوقت إلى 24 ساعة
             let [time, period] = timeStr.split(' ');
             let [hour, minute] = time.split(':');
             let h = parseInt(hour, 10);
@@ -179,21 +177,17 @@ export const useTracking = (barcode: string | undefined) => {
               if (h === 12) h = 0;
             }
             const hourStr = h.toString().padStart(2, '0');
-            // بناء سلسلة ISO
             return new Date(`${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`);
           };
-
-          // إيجاد الخطوة الأحدث
-          const stepsWithDate = result.data.data.filter(item => item.date && item.time);
-          let latestStep = stepsWithDate[0];
-          let latestDate = parseDateTime(latestStep.date, latestStep.time);
-          for (const step of stepsWithDate) {
-            const stepDate = parseDateTime(step.date, step.time);
-            if (stepDate && latestDate && stepDate > latestDate) {
-              latestStep = step;
-              latestDate = stepDate;
-            }
-          }
+          stepsWithDate.sort((a, b) => {
+            const dateA = parseDateTime(a.date, a.time);
+            const dateB = parseDateTime(b.date, b.time);
+            if (!dateA && !dateB) return 0;
+            if (!dateA) return 1;
+            if (!dateB) return -1;
+            return dateB.getTime() - dateA.getTime(); // تنازلي
+          });
+          const latestStep = stepsWithDate[0];
           const currentStatus = latestStep?.mainStatus || 'غير محدد';
 
           const transformedData: TrackingData = {
