@@ -65,7 +65,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     }
   };
 
-  // Sort steps by date and time descending
+  // Sort steps by date and time descending, then reverse for oldest at top
   const parseDateTime = (dateStr: string, timeStr: string) => {
     if (!dateStr || !timeStr) return null;
     const months: Record<string, string> = {
@@ -94,11 +94,23 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     if (!dateA) return 1;
     if (!dateB) return -1;
     return dateB.getTime() - dateA.getTime();
-  });
+  }).reverse();
 
   return (
-    <div className="max-w-5xl mx-auto px-4">
-      <div className="space-y-8 md:space-y-10">
+    <div className="max-w-5xl mx-auto px-4 relative">
+      {/* Vertical timeline gradient line - always visible, with effects */}
+      <div
+        className="absolute right-5 sm:right-7 top-0 bottom-0 w-1 z-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, #c084fc 0%, #818cf8 40%, #6366f1 80%, #a5b4fc 100%)',
+          borderRadius: '1rem',
+          opacity: 0.35,
+          filter: 'blur(0.5px) drop-shadow(0 0 12px #a78bfa) drop-shadow(0 0 24px #818cf8)',
+          boxShadow: '0 0 24px 4px #a5b4fc55, 0 4px 32px 0 #818cf855',
+          transition: 'opacity 0.4s',
+        }}
+      />
+      <div className="space-y-8 md:space-y-10 relative z-10">
         {sortedSteps.map((step, index) => {
           const styles = getStepStyles(step);
           const isLast = index === sortedSteps.length - 1;
@@ -106,20 +118,26 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
           return (
             <div 
               key={step.id} 
-              className={`relative transition-all duration-1000 ${animateSteps ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className={`relative group transition-all duration-1000 ${animateSteps ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:scale-[1.025] active:scale-[0.98] focus-within:scale-[1.03]`}
+              style={{
+                animationDelay: `${index * 0.2}s`,
+                zIndex: 10 + index,
+              }}
             >
               {/* Enhanced Connection Line */}
               {!isLast && (
                 <div className="absolute right-6 md:right-7 top-16 md:top-20 w-0.5 md:w-1 h-16 md:h-20 -mr-px">
-                  <div className={`w-full h-full ${styles.line} transition-all duration-700 rounded-full shadow-sm`} />
+                  <div className={`w-full h-full ${styles.line} transition-all duration-700 rounded-full shadow-sm group-hover:shadow-lg group-hover:scale-105`} />
                 </div>
               )}
 
               {/* Step Content */}
               <div className="flex items-start gap-6 md:gap-8">
                 {/* Enhanced Step Circle */}
-                <div className={`relative flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} hover:scale-110`}>
+                <div
+                  className={`relative flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 ${styles.circle} group-hover:scale-110 group-hover:shadow-2xl group-hover:ring-4 group-hover:ring-purple-300/30 group-focus-visible:ring-4 group-focus-visible:ring-indigo-300/40`}
+                  style={{ boxShadow: '0 2px 16px 0 #a5b4fc33, 0 0px 32px 0 #818cf822' }}
+                >
                   {getStepIcon(step, index)}
                   {step.isCurrent && (
                     <>
@@ -133,8 +151,14 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
                 </div>
 
                 {/* Enhanced Step Details */}
-                <div className={`flex-1 p-6 md:p-8 rounded-2xl border-2 transition-all duration-500 hover:scale-[1.02] ${styles.card} backdrop-blur-sm`}>
-                  <div className="flex flex-col gap-4 md:gap-6 text-right">
+                <div
+                  className={`flex-1 p-6 md:p-8 rounded-2xl border-2 transition-all duration-500 ${styles.card} backdrop-blur-sm group-hover:scale-[1.025] group-hover:shadow-2xl group-hover:border-purple-400/60 group-hover:bg-white/80 group-focus-within:scale-[1.03]`}
+                  style={{
+                    boxShadow: '0 2px 24px 0 #a5b4fc22, 0 8px 32px 0 #818cf822',
+                    transition: 'box-shadow 0.3s, border-color 0.3s, background 0.3s',
+                  }}
+                >
+                  <div className={`flex flex-col gap-4 md:gap-6 text-right`}>
                     <div className="flex-1">
                       <div className="flex flex-col gap-3 md:gap-4 mb-4 md:mb-6">
                         <h3 className={`text-xl md:text-2xl font-bold arabic leading-relaxed ${styles.status}`}>
