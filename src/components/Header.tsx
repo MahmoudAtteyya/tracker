@@ -46,12 +46,12 @@ const Header = () => {
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent' 
                   : 'text-white drop-shadow-lg'
               }`}>
-                إيلياء للتتبع
+                تتبع أوردرات إيلياء 
               </span>
               <span className={`text-xs lg:text-sm transition-all duration-300 ${
                 isScrolled ? 'text-gray-600 dark:text-gray-300' : 'text-white/90'
               }`}>
-                Elliaa Tracking
+                Eliaa Tracking
               </span>
             </div>
           </Link>
