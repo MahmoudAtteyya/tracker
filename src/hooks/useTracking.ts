@@ -166,11 +166,12 @@ export const useTracking = (barcode: string | undefined) => {
             };
             // تنظيف الوقت من أي رموز أو مسافات زائدة
             let cleanTimeStr = timeStr.replace(/[\u200E\u200F\r\n]+/g, '').replace(/\s+/g, ' ').trim();
-            // استخراج الوقت والفترة (صباحاً/مساءً)
-            let timeMatch = cleanTimeStr.match(/(\d{1,2}):(\d{2})\s*([\u0627-\u064A]+)?/);
+            // استخراج الفترة (صباح/مساء) بدقة
             let period = '';
-            if (cleanTimeStr.includes('مساء')) period = 'مساء';
-            else if (cleanTimeStr.includes('صباح')) period = 'صباح';
+            if (/مساء/.test(cleanTimeStr)) period = 'مساء';
+            else if (/صباح/.test(cleanTimeStr)) period = 'صباح';
+            // استخراج الوقت فقط
+            let timeMatch = cleanTimeStr.match(/(\d{1,2}):(\d{2})/);
             if (!timeMatch) return null;
             let hour = parseInt(timeMatch[1], 10);
             let minute = timeMatch[2];
@@ -185,9 +186,7 @@ export const useTracking = (barcode: string | undefined) => {
             const [_, day, monthAr, year] = dateMatch;
             const month = months[monthAr] || '01';
             const isoString = `${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`;
-            const dateObj = new Date(isoString);
-            // console.log('parseDateTime robust:', { dateStr, timeStr, cleanDateStr, cleanTimeStr, isoString, dateObj });
-            return dateObj;
+            return new Date(isoString);
           };
           stepsWithDate.sort((a, b) => {
             const dateA = parseDateTime(a.date, a.time);
