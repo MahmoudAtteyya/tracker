@@ -156,8 +156,45 @@ export const useTracking = (barcode: string | undefined) => {
             item.isFinished || item.isCurrent
           );
 
-          const currentItem = result.data.data.find(item => item.isCurrent);
-          const currentStatus = currentItem?.mainStatus || 'غير محدد';
+          // تحديد أحدث خطوة بناءً على التاريخ والوقت
+          const parseDateTime = (dateStr: string | null, timeStr: string | null) => {
+            if (!dateStr || !timeStr) return null;
+            // تحويل التاريخ العربي إلى تنسيق يمكن تحليله
+            // مثال: "19 يوليو 2025" => "2025-07-19"
+            const months: Record<string, string> = {
+              'يناير': '01', 'فبراير': '02', 'مارس': '03', 'أبريل': '04', 'مايو': '05', 'يونيو': '06',
+              'يوليو': '07', 'أغسطس': '08', 'سبتمبر': '09', 'أكتوبر': '10', 'نوفمبر': '11', 'ديسمبر': '12',
+            };
+            const dateMatch = dateStr.match(/(\d{1,2})\s+(\S+)\s+(\d{4})/);
+            if (!dateMatch) return null;
+            const [_, day, monthAr, year] = dateMatch;
+            const month = months[monthAr] || '01';
+            // تحويل الوقت إلى 24 ساعة
+            let [time, period] = timeStr.split(' ');
+            let [hour, minute] = time.split(':');
+            let h = parseInt(hour, 10);
+            if (period.includes('مساء')) {
+              if (h < 12) h += 12;
+            } else if (period.includes('صباح')) {
+              if (h === 12) h = 0;
+            }
+            const hourStr = h.toString().padStart(2, '0');
+            // بناء سلسلة ISO
+            return new Date(`${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`);
+          };
+
+          // إيجاد الخطوة الأحدث
+          const stepsWithDate = result.data.data.filter(item => item.date && item.time);
+          let latestStep = stepsWithDate[0];
+          let latestDate = parseDateTime(latestStep.date, latestStep.time);
+          for (const step of stepsWithDate) {
+            const stepDate = parseDateTime(step.date, step.time);
+            if (stepDate && latestDate && stepDate > latestDate) {
+              latestStep = step;
+              latestDate = stepDate;
+            }
+          }
+          const currentStatus = latestStep?.mainStatus || 'غير محدد';
 
           const transformedData: TrackingData = {
             barcode: result.data.barcode,

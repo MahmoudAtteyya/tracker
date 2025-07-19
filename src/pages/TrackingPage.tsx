@@ -65,7 +65,7 @@ const TrackingPage = () => {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 arabic">جاري البحث عن شحنتك</h2>
               <p className="text-gray-600 dark:text-gray-300 arabic">يرجى الانتظار...</p>
             </div>
-            <LoadingSpinner />
+          <LoadingSpinner />
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@ const TrackingPage = () => {
                     className="text-base md:text-lg py-4 md:py-6 px-6 md:px-8 flex-1 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
                     إعادة المحاولة
-                  </Button>
+                </Button>
                 </div>
               </CardContent>
             </Card>
@@ -168,28 +168,28 @@ const TrackingPage = () => {
         {/* Status Overview */}
         <div className={`mb-8 md:mb-12 transition-all duration-1000 delay-200 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-            <CardHeader className="pb-4 md:pb-6">
+          <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-4 arabic text-xl md:text-2xl text-right">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
                   <Truck className="w-6 h-6 text-white" />
                 </div>
-                <span>الحالة الحالية: {data.currentStatus}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              <span>الحالة الحالية: {data.currentStatus}</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
               <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed text-right">
                 {data.currentStatus === 'تم التسليم'
                   ? 'شحنتك تم تسليمها بنجاح. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'
                   : 'شحنتك قيد المعالجة حالياً. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'}
-              </p>
-            </CardContent>
-          </Card>
+            </p>
+          </CardContent>
+        </Card>
         </div>
 
         {/* Tracking Timeline */}
         <div className={`transition-all duration-1000 delay-400 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-            <CardHeader className="pb-4 md:pb-6">
+          <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-4 arabic text-xl md:text-2xl text-right">
                 <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
                   <MapPin className="w-6 h-6 text-white" />
@@ -197,13 +197,13 @@ const TrackingPage = () => {
                 <span>الجدول الزمني للتتبع</span>
               </CardTitle>
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 arabic leading-relaxed text-right">
-                تابع رحلة شحنتك من نقطة الإرسال إلى الوجهة
-              </p>
-            </CardHeader>
-            <CardContent className="pt-4 md:pt-8">
-              <TrackingStepper steps={data.steps} />
-            </CardContent>
-          </Card>
+              تابع رحلة شحنتك من نقطة الإرسال إلى الوجهة
+            </p>
+          </CardHeader>
+          <CardContent className="pt-4 md:pt-8">
+            <TrackingStepper steps={data.steps} />
+          </CardContent>
+        </Card>
         </div>
       </div>
     </div>
