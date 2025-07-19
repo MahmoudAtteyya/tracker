@@ -164,22 +164,29 @@ export const useTracking = (barcode: string | undefined) => {
               'يناير': '01', 'فبراير': '02', 'مارس': '03', 'أبريل': '04', 'مايو': '05', 'يونيو': '06',
               'يوليو': '07', 'أغسطس': '08', 'سبتمبر': '09', 'أكتوبر': '10', 'نوفمبر': '11', 'ديسمبر': '12',
             };
-            const dateMatch = dateStr.match(/(\d{1,2})\s+(\S+)\s+(\d{4})/);
+            // تنظيف الوقت من أي رموز أو مسافات زائدة
+            let cleanTimeStr = timeStr.replace(/[\u200E\u200F\r\n]+/g, '').replace(/\s+/g, ' ').trim();
+            // استخراج الوقت والفترة (صباحاً/مساءً)
+            let timeMatch = cleanTimeStr.match(/(\d{1,2}):(\d{2})\s*([\u0627-\u064A]+)?/);
+            let period = '';
+            if (cleanTimeStr.includes('مساء')) period = 'مساء';
+            else if (cleanTimeStr.includes('صباح')) period = 'صباح';
+            if (!timeMatch) return null;
+            let hour = parseInt(timeMatch[1], 10);
+            let minute = timeMatch[2];
+            // تحويل الوقت إلى 24 ساعة
+            if (period === 'مساء' && hour < 12) hour += 12;
+            if (period === 'صباح' && hour === 12) hour = 0;
+            const hourStr = hour.toString().padStart(2, '0');
+            // تنظيف التاريخ
+            let cleanDateStr = dateStr.replace(/[\u200E\u200F\r\n]+/g, '').replace(/\s+/g, ' ').trim();
+            const dateMatch = cleanDateStr.match(/(\d{1,2})\s+(\S+)\s+(\d{4})/);
             if (!dateMatch) return null;
             const [_, day, monthAr, year] = dateMatch;
             const month = months[monthAr] || '01';
-            let [time, period] = timeStr.split(' ');
-            let [hour, minute] = time.split(':');
-            let h = parseInt(hour, 10);
-            if (period.includes('مساء')) {
-              if (h < 12) h += 12;
-            } else if (period.includes('صباح')) {
-              if (h === 12) h = 0;
-            }
-            const hourStr = h.toString().padStart(2, '0');
             const isoString = `${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`;
             const dateObj = new Date(isoString);
-            console.log('parseDateTime input:', { dateStr, timeStr, isoString, dateObj });
+            // console.log('parseDateTime robust:', { dateStr, timeStr, cleanDateStr, cleanTimeStr, isoString, dateObj });
             return dateObj;
           };
           stepsWithDate.sort((a, b) => {
