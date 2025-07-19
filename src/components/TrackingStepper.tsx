@@ -65,12 +65,43 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     }
   };
 
+  // Sort steps by date and time descending
+  const parseDateTime = (dateStr: string, timeStr: string) => {
+    if (!dateStr || !timeStr) return null;
+    const months: Record<string, string> = {
+      'يناير': '01', 'فبراير': '02', 'مارس': '03', 'أبريل': '04', 'مايو': '05', 'يونيو': '06',
+      'يوليو': '07', 'أغسطس': '08', 'سبتمبر': '09', 'أكتوبر': '10', 'نوفمبر': '11', 'ديسمبر': '12',
+    };
+    const dateMatch = dateStr.match(/(\d{1,2})\s+(\S+)\s+(\d{4})/);
+    if (!dateMatch) return null;
+    const [_, day, monthAr, year] = dateMatch;
+    const month = months[monthAr] || '01';
+    let [time, period] = timeStr.split(' ');
+    let [hour, minute] = time.split(':');
+    let h = parseInt(hour, 10);
+    if (period.includes('مساء')) {
+      if (h < 12) h += 12;
+    } else if (period.includes('صباح')) {
+      if (h === 12) h = 0;
+    }
+    const hourStr = h.toString().padStart(2, '0');
+    return new Date(`${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`);
+  };
+  const sortedSteps = [...steps].sort((a, b) => {
+    const dateA = parseDateTime(a.date, a.time);
+    const dateB = parseDateTime(b.date, b.time);
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    return dateB.getTime() - dateA.getTime();
+  });
+
   return (
     <div className="max-w-5xl mx-auto px-4">
       <div className="space-y-8 md:space-y-10">
-        {steps.map((step, index) => {
+        {sortedSteps.map((step, index) => {
           const styles = getStepStyles(step);
-          const isLast = index === steps.length - 1;
+          const isLast = index === sortedSteps.length - 1;
 
           return (
             <div 
