@@ -192,24 +192,35 @@ const TrackingPage = () => {
         </div>
 
         {/* Status Overview */}
-        <div className={`mb-8 md:mb-12 transition-all duration-1000 delay-200 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
+        <div className={`mb-8 md:mb-12 transition-all duration-1000 delay-200 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          style={{
+            maxWidth: '700px',
+            margin: '0 auto',
+            boxShadow: '0 8px 32px 0 rgba(80, 36, 143, 0.10)',
+            borderRadius: '2rem',
+            background: 'linear-gradient(135deg, #f8f5ff 60%, #e9e3fa 100%)',
+            border: '2px solid #c3b6e6',
+            position: 'relative',
+            zIndex: 2,
+          }}
+        >
+          <Card className="bg-transparent border-0 shadow-none">
             <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-4 arabic text-xl md:text-2xl text-right">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                   <Truck className="w-6 h-6 text-white" />
                 </div>
-                <span>الحالة الحالية: {data.latestStep ? data.latestStep.status : data.currentStatus}</span>
+                <span className="font-bold text-purple-800">الحالة الحالية: {data.latestStep ? data.latestStep.status : data.currentStatus}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {data.latestStep ? (
                 <>
                   <h3 className="text-xl md:text-2xl font-bold arabic leading-relaxed text-purple-600 dark:text-purple-400 mb-2">{data.latestStep.statusArabic}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed mb-2">{data.latestStep.description}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed mb-2">{data.latestStep.description}</p>
                   {data.latestStep.location && (
-                    <div className="flex items-center justify-end gap-3 md:gap-4 mb-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                      <span className="text-base md:text-lg font-medium text-gray-700 dark:text-gray-200 arabic">{data.latestStep.location}</span>
+                    <div className="flex items-center justify-end gap-3 md:gap-4 mb-2 p-3 bg-purple-50 dark:bg-gray-700/50 rounded-lg border border-purple-200">
+                      <span className="text-base md:text-lg font-medium text-purple-900 dark:text-gray-200 arabic">{data.latestStep.location}</span>
                       <MapPin className="w-5 h-5 text-purple-500" />
                     </div>
                   )}
@@ -239,20 +250,36 @@ const TrackingPage = () => {
           </Card>
         </div>
 
+        {/* Visual separator */}
+        <div className="w-full flex justify-center mb-12">
+          <div className="h-2 w-32 md:w-48 rounded-full bg-gradient-to-r from-purple-300 via-indigo-200 to-purple-100 shadow-md opacity-80"></div>
+        </div>
+
         {/* Tracking Timeline */}
-        <div className={`transition-all duration-1000 delay-400 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-          <CardHeader className="pb-4 md:pb-6">
+        <div className={`transition-all duration-1000 delay-400 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          style={{
+            maxWidth: '900px',
+            margin: '0 auto',
+            boxShadow: '0 8px 32px 0 rgba(80, 36, 143, 0.08)',
+            borderRadius: '2rem',
+            background: 'linear-gradient(135deg, #f7faff 60%, #e3e6fa 100%)',
+            border: '2px solid #b6c3e6',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          <Card className="bg-transparent border-0 shadow-none">
+            <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-4 arabic text-xl md:text-2xl text-right">
-                <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
-                <span>الجدول الزمني للتتبع</span>
+                <span className="font-bold text-indigo-800">الجدول الزمني للتتبع</span>
               </CardTitle>
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 arabic leading-relaxed text-right">
-              تابع رحلة شحنتك من نقطة الإرسال إلى الوجهة
-            </p>
-          </CardHeader>
+                تابع رحلة شحنتك من نقطة الإرسال إلى الوجهة
+              </p>
+            </CardHeader>
           <CardContent className="pt-4 md:pt-8">
             <TrackingStepper steps={data.steps} />
           </CardContent>
