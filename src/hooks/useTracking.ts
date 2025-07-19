@@ -177,7 +177,10 @@ export const useTracking = (barcode: string | undefined) => {
               if (h === 12) h = 0;
             }
             const hourStr = h.toString().padStart(2, '0');
-            return new Date(`${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`);
+            const isoString = `${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`;
+            const dateObj = new Date(isoString);
+            console.log('parseDateTime input:', { dateStr, timeStr, isoString, dateObj });
+            return dateObj;
           };
           stepsWithDate.sort((a, b) => {
             const dateA = parseDateTime(a.date, a.time);
