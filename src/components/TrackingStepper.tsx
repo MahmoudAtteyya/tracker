@@ -37,16 +37,9 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     }
   };
 
-  const getStepStyles = (step: TrackingStep) => {
-    if (step.isCompleted) {
-      return {
-        circle: 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/25',
-        line: 'bg-gradient-to-b from-green-400 to-emerald-400',
-        card: 'bg-white dark:bg-gray-800 border-green-200 dark:border-green-700 shadow-lg hover:shadow-xl',
-        status: 'text-green-600 dark:text-green-400',
-        description: 'text-gray-600 dark:text-gray-300'
-      };
-    } else if (step.isCurrent) {
+  const getStepStyles = (step: TrackingStep, index: number) => {
+    if (index === latestIndex) {
+      // Lavender for latest
       return {
         circle: 'bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg shadow-purple-500/25 animate-pulse',
         line: 'bg-gradient-to-b from-purple-400 to-indigo-400',
@@ -54,7 +47,17 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
         status: 'text-purple-600 dark:text-purple-400 font-semibold',
         description: 'text-gray-700 dark:text-gray-200'
       };
+    } else if (index < latestIndex) {
+      // Green for previous
+      return {
+        circle: 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/25',
+        line: 'bg-gradient-to-b from-green-400 to-emerald-400',
+        card: 'bg-white dark:bg-gray-800 border-green-200 dark:border-green-700 shadow-lg hover:shadow-xl',
+        status: 'text-green-600 dark:text-green-400',
+        description: 'text-gray-600 dark:text-gray-300'
+      };
     } else {
+      // Default gray (should not happen)
       return {
         circle: 'bg-gray-200 dark:bg-gray-600 text-gray-400',
         line: 'bg-gray-200 dark:bg-gray-600',
@@ -87,7 +90,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     const hourStr = h.toString().padStart(2, '0');
     return new Date(`${year}-${month}-${day.padStart(2, '0')}T${hourStr}:${minute}:00`);
   };
-  const sortedSteps = [...steps].sort((a, b) => {
+  let sortedSteps = [...steps].sort((a, b) => {
     const dateA = parseDateTime(a.date, a.time);
     const dateB = parseDateTime(b.date, b.time);
     if (!dateA && !dateB) return 0;
@@ -95,6 +98,19 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
     if (!dateB) return -1;
     return dateB.getTime() - dateA.getTime();
   }).reverse();
+
+  // Ensure 'تم تسجيل الشحنة' always comes before 'الشحنة جاهزة للإستلام'
+  const indexRegistered = sortedSteps.findIndex(s => s.statusArabic === 'تم تسجيل الشحنة');
+  const indexReady = sortedSteps.findIndex(s => s.statusArabic === 'الشحنة جاهزة للإستلام');
+  if (indexRegistered !== -1 && indexReady !== -1 && indexRegistered > indexReady) {
+    // Swap them
+    const temp = sortedSteps[indexRegistered];
+    sortedSteps[indexRegistered] = sortedSteps[indexReady];
+    sortedSteps[indexReady] = temp;
+  }
+
+  // Mark the latest step (last in sortedSteps) as lavender, others as green
+  const latestIndex = sortedSteps.length - 1;
 
   return (
     <div className="max-w-5xl mx-auto px-4 relative">
@@ -112,7 +128,7 @@ const TrackingStepper: React.FC<TrackingStepperProps> = ({ steps }) => {
       />
       <div className="space-y-8 md:space-y-10 relative z-10">
         {sortedSteps.map((step, index) => {
-          const styles = getStepStyles(step);
+          const styles = getStepStyles(step, index);
           const isLast = index === sortedSteps.length - 1;
 
           return (

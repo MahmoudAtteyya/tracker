@@ -96,19 +96,19 @@ export const useTracking = (barcode: string | undefined) => {
 
       try {
         const startTime = Date.now();
-        
+
         // إنشاء AbortController للتحكم في timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 ثانية timeout
 
-        const response = await fetch(
+          const response = await fetch(
           `/api/track/${barcode}`,
-          {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
+            {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
             signal: controller.signal,
           }
         );
@@ -152,9 +152,9 @@ export const useTracking = (barcode: string | undefined) => {
 
         // التحقق من نجاح الاستجابة
         if (result.success && result.data && Array.isArray(result.data.data) && result.data.data.length > 0) {
-          const filteredData = result.data.data.filter(item => 
-            item.isFinished || item.isCurrent
-          );
+              const filteredData = result.data.data.filter(item => 
+                item.isFinished || item.isCurrent
+              );
 
           // إيجاد الخطوة الأحدث (مع ترتيب الخطوات حسب التاريخ والوقت تنازليًا)
           const stepsWithDate = result.data.data.filter(item => item.date && item.time);
@@ -200,19 +200,19 @@ export const useTracking = (barcode: string | undefined) => {
           const currentStatus = latestStep?.mainStatus || 'غير محدد';
 
           const transformedData: TrackingData & { latestStep?: any } = {
-            barcode: result.data.barcode,
-            status: currentStatus,
-            currentStatus: currentStatus,
-            steps: filteredData.map((item, index) => ({
-              id: `step-${item.status}`,
-              status: item.mainStatus || 'غير محدد',
-              statusArabic: item.itemStatus || 'غير محدد',
-              date: item.date || '',
-              time: item.time || '',
-              location: item.location ? `${item.location}${item.city ? '، ' + item.city : ''}${item.country ? '، ' + item.country : ''}` : '',
-              description: item.itemStatus || 'لا توجد تفاصيل متاحة',
-              isCompleted: item.isFinished,
-              isCurrent: item.isCurrent,
+                barcode: result.data.barcode,
+                status: currentStatus,
+                currentStatus: currentStatus,
+                steps: filteredData.map((item, index) => ({
+                  id: `step-${item.status}`,
+                  status: item.mainStatus || 'غير محدد',
+                  statusArabic: item.itemStatus || 'غير محدد',
+                  date: item.date || '',
+                  time: item.time || '',
+                  location: item.location ? `${item.location}${item.city ? '، ' + item.city : ''}${item.country ? '، ' + item.country : ''}` : '',
+                  description: item.itemStatus || 'لا توجد تفاصيل متاحة',
+                  isCompleted: item.isFinished,
+                  isCurrent: item.isCurrent,
             })),
             latestStep: latestStep ? {
               id: `step-${latestStep.status}`,
@@ -225,9 +225,9 @@ export const useTracking = (barcode: string | undefined) => {
               isCompleted: latestStep.isFinished,
               isCurrent: latestStep.isCurrent,
             } : undefined
-          };
-
-          setData(transformedData);
+              };
+              
+              setData(transformedData);
           setLoading(false);
           setIsRetrying(false);
           
