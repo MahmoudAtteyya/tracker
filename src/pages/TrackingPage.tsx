@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowRight, Copy, Share2, AlertCircle, Package, MapPin, Clock, Truck, CheckCircle } from 'lucide-react';
+import { ArrowRight, Copy, Share2, AlertCircle, Package, MapPin, Clock, Truck, CheckCircle, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import TrackingStepper from '@/components/TrackingStepper';
@@ -8,9 +8,29 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { useTracking } from '@/hooks/useTracking';
 import { toast } from '@/hooks/use-toast';
 
+type TrackingStep = {
+  id: string;
+  status: string;
+  statusArabic: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  isCompleted: boolean;
+  isCurrent: boolean;
+};
+
+type TrackingData = {
+  barcode: string;
+  status: string;
+  currentStatus: string;
+  steps: TrackingStep[];
+  latestStep?: TrackingStep;
+};
+
 const TrackingPage = () => {
   const { barcode } = useParams<{ barcode: string }>();
-  const { data, loading, error, retryCount, isRetrying } = useTracking(barcode);
+  const { data, loading, error, retryCount, isRetrying } = useTracking(barcode) as { data: TrackingData | null, loading: boolean, error: string | null, retryCount: number, isRetrying: boolean };
   const [animatePage, setAnimatePage] = useState(false);
 
   useEffect(() => {
@@ -168,22 +188,49 @@ const TrackingPage = () => {
         {/* Status Overview */}
         <div className={`mb-8 md:mb-12 transition-all duration-1000 delay-200 ${animatePage ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-          <CardHeader className="pb-4 md:pb-6">
+            <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-4 arabic text-xl md:text-2xl text-right">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
                   <Truck className="w-6 h-6 text-white" />
                 </div>
-              <span>الحالة الحالية: {data.currentStatus}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-              <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed text-right">
-                {data.currentStatus === 'تم التسليم'
-                  ? 'شحنتك تم تسليمها بنجاح. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'
-                  : 'شحنتك قيد المعالجة حالياً. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'}
-            </p>
-          </CardContent>
-        </Card>
+                <span>الحالة الحالية: {data.latestStep ? data.latestStep.status : data.currentStatus}</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {data.latestStep ? (
+                <>
+                  <h3 className="text-xl md:text-2xl font-bold arabic leading-relaxed text-purple-600 dark:text-purple-400 mb-2">{data.latestStep.statusArabic}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed mb-2">{data.latestStep.description}</p>
+                  {data.latestStep.location && (
+                    <div className="flex items-center justify-end gap-3 md:gap-4 mb-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                      <span className="text-base md:text-lg font-medium text-gray-700 dark:text-gray-200 arabic">{data.latestStep.location}</span>
+                      <MapPin className="w-5 h-5 text-purple-500" />
+                    </div>
+                  )}
+                  <div className="flex flex-row items-center gap-4 mt-2">
+                    {data.latestStep.date && (
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 arabic">{data.latestStep.date}</span>
+                      </div>
+                    )}
+                    {data.latestStep.time && (
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-gray-400" />
+                        <span className="text-base md:text-lg text-gray-600 dark:text-gray-300 arabic">{data.latestStep.time}</span>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg arabic leading-relaxed text-right">
+                  {data.currentStatus === 'تم التسليم'
+                    ? 'شحنتك تم تسليمها بنجاح. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'
+                    : 'شحنتك قيد المعالجة حالياً. تابع الجدول الزمني التفصيلي أدناه للمزيد من المعلومات.'}
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         {/* Tracking Timeline */}

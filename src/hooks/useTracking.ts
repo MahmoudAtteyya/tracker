@@ -190,7 +190,7 @@ export const useTracking = (barcode: string | undefined) => {
           const latestStep = stepsWithDate[0];
           const currentStatus = latestStep?.mainStatus || 'غير محدد';
 
-          const transformedData: TrackingData = {
+          const transformedData: TrackingData & { latestStep?: any } = {
             barcode: result.data.barcode,
             status: currentStatus,
             currentStatus: currentStatus,
@@ -204,7 +204,18 @@ export const useTracking = (barcode: string | undefined) => {
               description: item.itemStatus || 'لا توجد تفاصيل متاحة',
               isCompleted: item.isFinished,
               isCurrent: item.isCurrent,
-            }))
+            })),
+            latestStep: latestStep ? {
+              id: `step-${latestStep.status}`,
+              status: latestStep.mainStatus || 'غير محدد',
+              statusArabic: latestStep.itemStatus || 'غير محدد',
+              date: latestStep.date || '',
+              time: latestStep.time || '',
+              location: latestStep.location ? `${latestStep.location}${latestStep.city ? '، ' + latestStep.city : ''}${latestStep.country ? '، ' + latestStep.country : ''}` : '',
+              description: latestStep.itemStatus || 'لا توجد تفاصيل متاحة',
+              isCompleted: latestStep.isFinished,
+              isCurrent: latestStep.isCurrent,
+            } : undefined
           };
 
           setData(transformedData);
