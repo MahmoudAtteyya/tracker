@@ -82,17 +82,17 @@ const Hero = () => {
           <div className="mb-12 lg:mb-16">
             <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full border border-purple-200/50 dark:border-purple-700/50">
               <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse" />
-              <span className="text-sm font-medium text-purple-700 dark:text-purple-300">تتبع الشحنات المصرية</span>
+              <span className="text-sm font-medium text-purple-700 dark:text-purple-300">  تتبع شحنات إيلياء</span>
             </div>
             
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-purple-800 to-indigo-800 dark:from-white dark:via-purple-200 dark:to-indigo-200 bg-clip-text text-transparent leading-tight">
               Track Your Shipment
             </h1>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 arabic bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-3xl lg:text-4xl font-bold mb-8 arabic bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
               تتبع شحنتك
             </h2>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed arabic">
-              اكتشف مكان شحنتك في الوقت الفعلي مع  تتبع أوردرات إيلياء 
+              تعرف على مكان شحنتك في الوقت الفعلي مع موقع تتبع أوردرات إيلياء 
             </p>
           </div>
 
