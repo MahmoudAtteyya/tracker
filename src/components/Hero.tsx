@@ -92,7 +92,7 @@ const Hero = () => {
               تتبع شحنتك
             </h2>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed arabic">
-              اكتشف مكان شحنتك في الوقت الفعلي مع إيلياء للتتبع
+              اكتشف مكان شحنتك في الوقت الفعلي مع  تتبع أوردرات إيلياء 
             </p>
           </div>
 

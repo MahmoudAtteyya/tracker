@@ -35,7 +35,7 @@ const TrackingPage = () => {
 
   useEffect(() => {
     if (barcode) {
-      document.title = `تتبع ${barcode} - إيلياء للتتبع`;
+      document.title = `تتبع ${barcode} -  تتبع أوردرات إيلياء `;
     }
     const timer = setTimeout(() => setAnimatePage(true), 100);
     return () => clearTimeout(timer);

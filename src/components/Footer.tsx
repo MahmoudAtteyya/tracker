@@ -17,7 +17,7 @@ const Footer = () => {
               </div>
               <div>
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                  إيلياء للتتبع
+                   تتبع أوردرات إيلياء 
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">Eliaa Tracking</p>
               </div>

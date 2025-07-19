@@ -14,7 +14,7 @@ const About = () => {
           </div>
           
           <h1 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-purple-800 to-indigo-800 dark:from-white dark:via-purple-200 dark:to-indigo-200 bg-clip-text text-transparent">
-            إيلياء للتتبع
+             تتبع أوردرات إيلياء 
           </h1>
           <h2 className="text-2xl lg:text-3xl font-semibold mb-8 arabic bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
             موقع تتبع شحنات إيلياء
@@ -94,7 +94,7 @@ const About = () => {
           <CardContent>
             <div className="max-w-4xl mx-auto text-center space-y-6">
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed arabic">
-                في إيلياء للتتبع، نؤمن بأن تتبع الطرود يجب أن يكون بسيطاً وموثوقاً ومتاحاً للجميع. 
+                في  تتبع أوردرات إيلياء ، نؤمن بأن تتبع الطرود يجب أن يكون بسيطاً وموثوقاً ومتاحاً للجميع. 
                 مهمتنا هي توفير أشمل وأسهل تجربة تتبع شحنات في مصر .
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed arabic">
@@ -108,7 +108,7 @@ const About = () => {
         {/* Why Choose Us */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-center mb-12 arabic bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            لماذا تختار إيلياء للتتبع؟
+            لماذا تختار  تتبع أوردرات إيلياء ؟
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
