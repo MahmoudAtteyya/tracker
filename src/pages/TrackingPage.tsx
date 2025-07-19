@@ -150,6 +150,12 @@ const TrackingPage = () => {
     );
   }
 
+  if (data && data.latestStep) {
+    // Debug: Show latestStep in console
+    // eslint-disable-next-line no-console
+    console.log('latestStep', data.latestStep);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
