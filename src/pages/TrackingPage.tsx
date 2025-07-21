@@ -119,19 +119,20 @@ const TrackingPage = () => {
                   <p className="font-semibold text-gray-900 dark:text-white">يرجى التحقق من:</p>
                   <ul className="list-disc list-inside space-y-2 mr-4 md:mr-6 leading-relaxed">
                     <li>أن رقم التتبع مُدخل بشكل صحيح</li>
-                    <li>أن الشحنة تم معالجتها من قبل البريد المصري</li>
+                    <li>أن الشحنة تم معالجتها من خلالنا</li>
                     <li>المحاولة مرة أخرى لاحقاً إذا كانت الشحنة حديثة</li>
+<li>التواصل معنا عن طريق الواتساب لإخبارنا بالمشكلة</li>
                   </ul>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-8">
                   <Button asChild className="text-base md:text-lg py-4 md:py-6 px-6 md:px-8 flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-0 shadow-lg">
                     <a
-                      href={`https://egyptpost.gov.eg/ar-EG/TrackTrace/GetShipmentDetails?barcode=${barcode}`}
+                      href={`http://wa.me/201273295694`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      تتبع من الموقع الرسمي
+                      تواصل عن طريق الواتساب
                     </a>
                   </Button>
                   <Button 
