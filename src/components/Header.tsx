@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Package, Menu, X, Home, Info } from 'lucide-react';
+import { Package, Menu, X, Home, Info, Server } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -19,6 +19,7 @@ const Header = () => {
   const navItems = [
     { name: 'الرئيسية', path: '/', icon: Home },
     { name: 'حول', path: '/about', icon: Info },
+    { name: 'حالة الخادم', path: '/server-status', icon: Server },
   ];
 
   const isActive = (path: string) => location.pathname === path;
