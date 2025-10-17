@@ -5,23 +5,13 @@ class APIManager {
     this.apis = [
       {
         id: 'primary',
-        name: 'Primary API',
-        url: 'http://13.62.63.200:3000/track',
+        name: 'Tracking API',
+        url: 'http://172.104.141.176:3000/track',
         isActive: true,
         failureCount: 0,
         lastFailure: null,
         lastSuccess: null,
         priority: 1
-      },
-      {
-        id: 'fallback',
-        name: 'Fallback API',
-        url: 'http://16.16.250.40:3000/track',
-        isActive: true,
-        failureCount: 0,
-        lastFailure: null,
-        lastSuccess: null,
-        priority: 2
       }
     ];
     
