@@ -6,7 +6,7 @@ class APIManager {
       {
         id: 'primary',
         name: 'Tracking API',
-        url: 'http://172.104.141.176:3000/track',
+        url: 'https://egyptpost.elliaa.com/track',
         isActive: true,
         failureCount: 0,
         lastFailure: null,
