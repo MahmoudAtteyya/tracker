@@ -14,14 +14,14 @@ class APIManager {
         priority: 1
       }
     ];
-    
+
     this.currentApiIndex = 0;
     this.maxRetries = 3;
     this.failureThreshold = 3;
     this.cooldownPeriod = 5 * 60 * 1000; // 5 minutes
     this.requestTimeout = 30000; // 30 seconds
     this.healthCheckInterval = 2 * 60 * 1000; // 2 minutes
-    
+
     // Start periodic health checks
     this.startHealthChecks();
   }
@@ -47,12 +47,12 @@ class APIManager {
    */
   isAPIAvailable(api) {
     if (!api.isActive) return false;
-    
+
     const now = Date.now();
-    const isInCooldown = api.lastFailure && 
+    const isInCooldown = api.lastFailure &&
       (now - api.lastFailure) < this.cooldownPeriod &&
       api.failureCount >= this.failureThreshold;
-    
+
     return !isInCooldown;
   }
 
@@ -61,7 +61,7 @@ class APIManager {
    */
   switchToNextAPI() {
     const availableAPIs = this.getAvailableAPIs();
-    
+
     if (availableAPIs.length === 0) {
       console.log('⚠️  [API Manager] No available APIs found, using current API');
       return false;
@@ -69,17 +69,17 @@ class APIManager {
 
     const currentAPI = this.getCurrentAPI();
     const nextAPI = availableAPIs.find(api => api.id !== currentAPI.id) || availableAPIs[0];
-    
+
     if (nextAPI.id !== currentAPI.id) {
       const previousIndex = this.currentApiIndex;
       this.currentApiIndex = this.apis.findIndex(api => api.id === nextAPI.id);
-      
+
       console.log(`🔄 [API Manager] Switching from ${this.apis[previousIndex].name} (${this.apis[previousIndex].url}) to ${nextAPI.name} (${nextAPI.url})`);
       console.log(`📊 [API Manager] Previous API failure count: ${this.apis[previousIndex].failureCount}`);
-      
+
       return true;
     }
-    
+
     return false;
   }
 
@@ -104,7 +104,7 @@ class APIManager {
       api.lastFailure = Date.now();
       api.failureCount++;
       console.log(`❌ [API Manager] ${api.name} failed (attempt ${api.failureCount}/${this.failureThreshold}): ${error.message}`);
-      
+
       if (api.failureCount >= this.failureThreshold) {
         console.log(`🚫 [API Manager] ${api.name} marked as unavailable for ${this.cooldownPeriod / 1000}s due to repeated failures`);
       }
@@ -129,16 +129,16 @@ class APIManager {
       });
 
       clearTimeout(timeoutId);
-      
+
       // For health check, we just need to see if the server responds
       // Even a 404 is better than no response at all
       if (response.status < 500) {
         this.recordSuccess(api.id);
         return true;
       }
-      
+
       throw new Error(`Server error: ${response.status}`);
-      
+
     } catch (error) {
       // Don't record failure for health checks, just log
       console.log(`🔍 [Health Check] ${api.name} health check failed: ${error.message}`);
@@ -152,17 +152,17 @@ class APIManager {
   startHealthChecks() {
     setInterval(async () => {
       console.log('🔍 [Health Check] Starting periodic API health checks...');
-      
+
       for (const api of this.apis) {
         if (!this.isAPIAvailable(api) && api.failureCount >= this.failureThreshold) {
           console.log(`🔍 [Health Check] Checking ${api.name} for recovery...`);
           const isHealthy = await this.performHealthCheck(api);
-          
+
           if (isHealthy) {
             console.log(`🎉 [Health Check] ${api.name} is back online! Resetting failure count.`);
             api.failureCount = 0;
             api.lastFailure = null;
-            
+
             // If this is the primary API and we're currently using fallback, switch back
             if (api.priority === 1 && this.currentApiIndex !== 0) {
               this.currentApiIndex = 0;
@@ -180,24 +180,24 @@ class APIManager {
   async makeRequest(barcode) {
     let lastError = null;
     const availableAPIs = this.getAvailableAPIs();
-    
+
     if (availableAPIs.length === 0) {
       throw new Error('No available APIs for tracking request');
     }
 
     // Always try current API first, then try others
     const apisToTry = [this.getCurrentAPI(), ...availableAPIs.filter(api => api.id !== this.getCurrentAPI().id)];
-    
+
     for (let i = 0; i < apisToTry.length; i++) {
       const api = apisToTry[i];
-      
+
       if (!this.isAPIAvailable(api)) {
         console.log(`⏭️  [API Manager] Skipping ${api.name} - currently unavailable`);
         continue;
       }
 
       console.log(`🔍 [API Manager] Attempting request to ${api.name} (${api.url}/${barcode})`);
-      
+
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
@@ -207,6 +207,12 @@ class APIManager {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept-Language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
           },
           signal: controller.signal,
         });
@@ -218,23 +224,23 @@ class APIManager {
         }
 
         const data = await response.json();
-        
+
         // Record success
         this.recordSuccess(api.id);
-        
+
         // Switch to this API if it's not current and has higher priority
         if (api.id !== this.getCurrentAPI().id && api.priority < this.getCurrentAPI().priority) {
           this.currentApiIndex = this.apis.findIndex(a => a.id === api.id);
           console.log(`🔄 [API Manager] Switched to higher priority API: ${api.name}`);
         }
-        
+
         console.log(`✅ [API Manager] Request successful via ${api.name}`);
         return data;
 
       } catch (error) {
         lastError = error;
         this.recordFailure(api.id, error);
-        
+
         // If this was the current API and it failed, try to switch
         if (api.id === this.getCurrentAPI().id) {
           const switched = this.switchToNextAPI();
@@ -242,9 +248,9 @@ class APIManager {
             console.log(`🔄 [API Manager] Automatically switched due to failure`);
           }
         }
-        
+
         console.log(`❌ [API Manager] Request failed via ${api.name}: ${error.message}`);
-        
+
         // Continue to next API
         continue;
       }
@@ -264,7 +270,7 @@ class APIManager {
       apis: this.apis.map(api => ({
         ...api,
         isAvailable: this.isAPIAvailable(api),
-        cooldownRemaining: api.lastFailure ? 
+        cooldownRemaining: api.lastFailure ?
           Math.max(0, this.cooldownPeriod - (Date.now() - api.lastFailure)) : 0
       }))
     };
