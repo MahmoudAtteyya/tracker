@@ -203,19 +203,28 @@ class APIManager {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
 
+        console.log(`🔍 [API Manager] Fetching URL: ${api.url}/${barcode}`);
+
         const response = await fetch(`${api.url}/${barcode}`, {
           method: 'GET',
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-          },
           signal: controller.signal,
         });
 
         clearTimeout(timeoutId);
 
+        // Log response details for debugging
+        console.log(`📡 [API Manager] Response status: ${response.status} ${response.statusText}`);
+        console.log(`📡 [API Manager] Response headers:`, JSON.stringify(Object.fromEntries(response.headers.entries())));
+
         if (!response.ok) {
+          // Try to get error details from response body
+          let errorBody = '';
+          try {
+            errorBody = await response.text();
+            console.log(`📡 [API Manager] Error response body:`, errorBody.substring(0, 500));
+          } catch (e) {
+            console.log(`📡 [API Manager] Could not read error body:`, e.message);
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
